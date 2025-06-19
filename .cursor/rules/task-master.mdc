@@ -1,0 +1,22 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+As you complete tasks and reference relevant files, **update this file**.  
+Keep each line short, add new tasks at the bottom of a section, and move tasks between sections instead of rewriting them.
+
+Tasks should be broken down into managable chunks and clearly outlined with a goal and a process. Each task will have a description, status, dependencies and complexity (1-10). As we keep progressing through the project, you will update this file to add more tasks, tick off completed tasks, update accordingly when needed for dependencies, complexity and status.
+
+## ✅ Completed
+- [x] Start Project
+- [x] Establish Rules
+
+## 🔄 In Progress
+- [ ] 
+    - 
+
+## 📝 Backlog
+
+
+
