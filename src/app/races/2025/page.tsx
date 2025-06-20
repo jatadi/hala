@@ -1,42 +1,14 @@
 import { Navbar } from '@/components/navbar';
 import { SeasonNavigation } from '@/components/match/SeasonNavigation';
 import { RaceCard } from '@/components/match/RaceCard';
+import { getF1RacesByYear } from '@/lib/supabase/queries/races';
 
-// Example data - will be replaced with real data later
-const exampleRaces = [
-  {
-    name: "Bahrain Grand Prix",
-    imageUrl: "https://media.formula1.com/image/upload/f_auto/q_auto/v1677245035/content/dam/fom-website/2018-redesign-assets/Track%20icons%204x3/Bahrain%20carbon.png.transform/3col/image.png",
-    date: "2025"
-  },
-  {
-    name: "Saudi Arabian Grand Prix",
-    imageUrl: "https://media.formula1.com/image/upload/f_auto/q_auto/v1677245030/content/dam/fom-website/2018-redesign-assets/Track%20icons%204x3/Saudi%20Arabia%20carbon.png.transform/3col/image.png",
-    date: "2025"
-  },
-  {
-    name: "Australian Grand Prix",
-    imageUrl: "https://media.formula1.com/image/upload/f_auto/q_auto/v1677245033/content/dam/fom-website/2018-redesign-assets/Track%20icons%204x3/Australia%20carbon.png.transform/3col/image.png",
-    date: "2025"
-  },
-  {
-    name: "Japanese Grand Prix",
-    imageUrl: "https://media.formula1.com/image/upload/f_auto/q_auto/v1677245031/content/dam/fom-website/2018-redesign-assets/Track%20icons%204x3/Japan%20carbon.png.transform/3col/image.png",
-    date: "2025"
-  },
-  {
-    name: "Chinese Grand Prix",
-    imageUrl: "https://media.formula1.com/image/upload/f_auto/q_auto/v1677245034/content/dam/fom-website/2018-redesign-assets/Track%20icons%204x3/China%20carbon.png.transform/3col/image.png",
-    date: "2025"
-  },
-  {
-    name: "Miami Grand Prix",
-    imageUrl: "https://media.formula1.com/image/upload/f_auto/q_auto/v1677245032/content/dam/fom-website/2018-redesign-assets/Track%20icons%204x3/Miami%20carbon.png.transform/3col/image.png",
-    date: "2025"
-  }
-];
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
-export default function Season2025Page() {
+export default async function Season2025Page() {
+  const races = await getF1RacesByYear(2025);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-hala-blue via-slate-900 to-hala-dark">
       <Navbar />
@@ -53,16 +25,23 @@ export default function Season2025Page() {
 
           {/* Race Grid - Centered with fixed-width cards */}
           <div className="max-w-6xl mx-auto px-4">
-            <div className="flex flex-wrap justify-center gap-6">
-              {exampleRaces.map((race, index) => (
-                <RaceCard 
-                  key={index}
-                  name={race.name}
-                  imageUrl={race.imageUrl}
-                  date={race.date}
-                />
-              ))}
-            </div>
+            {races.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-gray-400">No races scheduled for 2025 yet</p>
+              </div>
+            ) : (
+              <div className="flex flex-wrap justify-center gap-6">
+                {races.map((race) => (
+                  <RaceCard
+                    key={race.race_id}
+                    name={race.race_name}
+                    imageUrl={race.poster_url || ''}
+                    date={race.year.toString()}
+                    raceId={race.race_id}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </main>

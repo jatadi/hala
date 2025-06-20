@@ -1,42 +1,14 @@
 import { Navbar } from '@/components/navbar';
 import { SeasonNavigation } from '@/components/match/SeasonNavigation';
 import { RaceCard } from '@/components/match/RaceCard';
+import { getPastF1Races } from '@/lib/supabase/queries/races';
 
-// Example data - will be replaced with real data later
-const exampleRaces = [
-  {
-    name: "Abu Dhabi Grand Prix",
-    imageUrl: "https://media.formula1.com/image/upload/f_auto/q_auto/v1677245036/content/dam/fom-website/2018-redesign-assets/Track%20icons%204x3/Abu%20Dhabi%20carbon.png.transform/3col/image.png",
-    date: "2023"
-  },
-  {
-    name: "Las Vegas Grand Prix",
-    imageUrl: "https://media.formula1.com/image/upload/f_auto/q_auto/v1677245030/content/dam/fom-website/2018-redesign-assets/Track%20icons%204x3/Las%20Vegas%20carbon.png.transform/3col/image.png",
-    date: "2023"
-  },
-  {
-    name: "Brazilian Grand Prix",
-    imageUrl: "https://media.formula1.com/image/upload/f_auto/q_auto/v1677245033/content/dam/fom-website/2018-redesign-assets/Track%20icons%204x3/Brazil%20carbon.png.transform/3col/image.png",
-    date: "2023"
-  },
-  {
-    name: "Mexico City Grand Prix",
-    imageUrl: "https://media.formula1.com/image/upload/f_auto/q_auto/v1677245031/content/dam/fom-website/2018-redesign-assets/Track%20icons%204x3/Mexico%20carbon.png.transform/3col/image.png",
-    date: "2023"
-  },
-  {
-    name: "United States Grand Prix",
-    imageUrl: "https://media.formula1.com/image/upload/f_auto/q_auto/v1677245034/content/dam/fom-website/2018-redesign-assets/Track%20icons%204x3/United%20States%20carbon.png.transform/3col/image.png",
-    date: "2023"
-  },
-  {
-    name: "Qatar Grand Prix",
-    imageUrl: "https://media.formula1.com/image/upload/f_auto/q_auto/v1677245032/content/dam/fom-website/2018-redesign-assets/Track%20icons%204x3/Qatar%20carbon.png.transform/3col/image.png",
-    date: "2023"
-  }
-];
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
-export default function PastRacesPage() {
+export default async function PastRacesPage() {
+  const races = await getPastF1Races();
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-hala-blue via-slate-900 to-hala-dark">
       <Navbar />
@@ -53,16 +25,23 @@ export default function PastRacesPage() {
 
           {/* Race Grid - Centered with fixed-width cards */}
           <div className="max-w-6xl mx-auto px-4">
-            <div className="flex flex-wrap justify-center gap-6">
-              {exampleRaces.map((race, index) => (
-                <RaceCard 
-                  key={index}
-                  name={race.name}
-                  imageUrl={race.imageUrl}
-                  date={race.date}
-                />
-              ))}
-            </div>
+            {races.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-gray-400">No past races available</p>
+              </div>
+            ) : (
+              <div className="flex flex-wrap justify-center gap-6">
+                {races.map((race) => (
+                  <RaceCard
+                    key={race.race_id}
+                    name={race.race_name}
+                    imageUrl={race.poster_url || ''}
+                    date={race.year.toString()}
+                    raceId={race.race_id}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </main>

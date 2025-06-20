@@ -21,6 +21,7 @@ export function RecentActivity({ recentRaces }: RecentActivityProps) {
         {recentRaces.map((race) => (
           <RaceCard
             key={race.race_id}
+            raceId={race.race_id}
             name={race.race_name}
             imageUrl={race.poster_url || ''}
             date={race.year.toString()}
