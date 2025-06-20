@@ -7,21 +7,29 @@ import { debugUserProfile } from '@/lib/supabase/queries/debug';
 import { getProfileStats } from '@/lib/supabase/queries/profile';
 import { supabase } from '@/lib/supabase/client';
 
+// Disable caching for this page
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 async function getRecentRaces(userId: string): Promise<F1Race[]> {
   // First get the user's recent logs
   const { data: logs, error: logsError } = await supabase
     .from('logs')
-    .select('match_id')
+    .select('match_id, watched_at')
     .eq('user_id', userId)
-    .order('watched_at', { ascending: false })
-    .limit(8);
+    .order('watched_at', { ascending: false });
 
   if (logsError) {
     console.error('Error fetching logs:', logsError);
     return [];
   }
 
-  if (!logs?.length) return [];
+  if (!logs?.length) {
+    console.log('No logs found for user:', userId);
+    return [];
+  }
+
+  console.log('Found logs:', logs);
 
   // Then get the corresponding races
   const { data: races, error: racesError } = await supabase
@@ -47,6 +55,7 @@ async function getRecentRaces(userId: string): Promise<F1Race[]> {
     return [];
   }
 
+  console.log('Found races:', races);
   return races || [];
 }
 
@@ -70,6 +79,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
   }
 
   const recentRaces = await getRecentRaces(profile.id);
+  console.log('Recent races:', recentRaces);
 
   return (
     <div className="min-h-screen bg-hala-dark">

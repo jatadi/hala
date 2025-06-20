@@ -5,7 +5,9 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 export const supabase = createClient(supabaseUrl, supabaseKey, {
   auth: {
-    persistSession: false // Don't persist auth state
+    persistSession: true, // Enable session persistence
+    autoRefreshToken: true, // Enable token auto-refresh
+    detectSessionInUrl: true // Enable detecting auth redirects
   },
   db: {
     schema: 'public'

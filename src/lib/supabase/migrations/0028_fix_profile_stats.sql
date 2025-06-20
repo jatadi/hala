@@ -1,4 +1,4 @@
-/* Create a function to get profile stats directly */
+-- Drop and recreate the profile stats function with the fixed query
 create or replace function get_profile_stats(username_param text)
 returns table (
   races_watched bigint,
@@ -41,4 +41,7 @@ as $$
      join public.users u on u.id = f.followee_id 
      where u.username = username_param) as followers_count
   from user_logs;
-$$; 
+$$;
+
+-- Verify the fix by checking maxv's stats
+select * from get_profile_stats('maxv'); 

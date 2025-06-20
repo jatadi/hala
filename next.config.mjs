@@ -18,6 +18,11 @@ const nextConfig = {
         pathname: '/**',
       }
     ],
+    domains: [
+      'media.formula1.com',
+      'example.com',
+      'ui-avatars.com'
+    ],
   },
 };
 

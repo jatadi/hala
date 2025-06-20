@@ -1,5 +1,5 @@
 export interface F1Race {
-  race_id: number;        // matches.id
+  race_id: number;
   race_name: string;      // matches.title
   year: number;          // extracted from matches.starts_at
   race_date: string;     // matches.starts_at

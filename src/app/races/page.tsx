@@ -29,6 +29,7 @@ export default async function RacesPage() {
                   name={race.race_name}
                   imageUrl={race.poster_url || ''}
                   date={race.year.toString()}
+                  raceId={race.race_id}
                 />
               ))}
             </div>
