@@ -1,0 +1,194 @@
+[
+  {
+    "grandPrix": "Flag of BahrainBahrain",
+    "date": "2001-03-01T23:00:00.000Z",
+    "winner": "Max VerstappenVER ",
+    "car": "Red Bull Racing Honda RBPT",
+    "laps": 57,
+    "time": "1:31:44.742"
+  },
+  {
+    "grandPrix": "Flag of Saudi ArabiaSaudi Arabia",
+    "date": "2001-03-08T23:00:00.000Z",
+    "winner": "Max VerstappenVER ",
+    "car": "Red Bull Racing Honda RBPT",
+    "laps": 50,
+    "time": "1:20:43.273"
+  },
+  {
+    "grandPrix": "Flag of AustraliaAustralia",
+    "date": "2001-03-23T23:00:00.000Z",
+    "winner": "Carlos SainzSAI ",
+    "car": "Ferrari",
+    "laps": 58,
+    "time": "1:20:26.843"
+  },
+  {
+    "grandPrix": "Flag of JapanJapan",
+    "date": "2001-04-06T22:00:00.000Z",
+    "winner": "Max VerstappenVER ",
+    "car": "Red Bull Racing Honda RBPT",
+    "laps": 53,
+    "time": "1:54:23.566"
+  },
+  {
+    "grandPrix": "Flag of People’s Republic of ChinaChina",
+    "date": "2001-04-20T22:00:00.000Z",
+    "winner": "Max VerstappenVER ",
+    "car": "Red Bull Racing Honda RBPT",
+    "laps": 56,
+    "time": "1:40:52.554"
+  },
+  {
+    "grandPrix": "Flag of United States of AmericaMiami",
+    "date": "2001-05-04T22:00:00.000Z",
+    "winner": "Lando NorrisNOR ",
+    "car": "McLaren Mercedes",
+    "laps": 57,
+    "time": "1:30:49.876"
+  },
+  {
+    "grandPrix": "Flag of ItalyEmilia-Romagna",
+    "date": "2001-05-18T22:00:00.000Z",
+    "winner": "Max VerstappenVER ",
+    "car": "Red Bull Racing Honda RBPT",
+    "laps": 63,
+    "time": "1:25:25.252"
+  },
+  {
+    "grandPrix": "Flag of MonacoMonaco",
+    "date": "2001-05-25T22:00:00.000Z",
+    "winner": "Charles LeclercLEC ",
+    "car": "Ferrari",
+    "laps": 78,
+    "time": "2:23:15.554"
+  },
+  {
+    "grandPrix": "Flag of CanadaCanada",
+    "date": "2001-06-08T22:00:00.000Z",
+    "winner": "Max VerstappenVER ",
+    "car": "Red Bull Racing Honda RBPT",
+    "laps": 70,
+    "time": "1:45:47.927"
+  },
+  {
+    "grandPrix": "Flag of SpainSpain",
+    "date": "2001-06-22T22:00:00.000Z",
+    "winner": "Max VerstappenVER ",
+    "car": "Red Bull Racing Honda RBPT",
+    "laps": 66,
+    "time": "1:28:20.227"
+  },
+  {
+    "grandPrix": "Flag of AustriaAustria",
+    "date": "2001-06-29T22:00:00.000Z",
+    "winner": "George RussellRUS ",
+    "car": "Mercedes",
+    "laps": 71,
+    "time": "1:24:22.798"
+  },
+  {
+    "grandPrix": "Flag of Great BritainGreat Britain",
+    "date": "2001-07-06T22:00:00.000Z",
+    "winner": "Lewis HamiltonHAM ",
+    "car": "Mercedes",
+    "laps": 52,
+    "time": "1:22:27.059"
+  },
+  {
+    "grandPrix": "Flag of HungaryHungary",
+    "date": "2001-07-20T22:00:00.000Z",
+    "winner": "Oscar PiastriPIA ",
+    "car": "McLaren Mercedes",
+    "laps": 70,
+    "time": "1:38:01.989"
+  },
+  {
+    "grandPrix": "Flag of BelgiumBelgium",
+    "date": "2001-07-27T22:00:00.000Z",
+    "winner": "Lewis HamiltonHAM ",
+    "car": "Mercedes",
+    "laps": 44,
+    "time": "1:19:57.566"
+  },
+  {
+    "grandPrix": "Flag of NetherlandsNetherlands",
+    "date": "2001-08-24T22:00:00.000Z",
+    "winner": "Lando NorrisNOR ",
+    "car": "McLaren Mercedes",
+    "laps": 72,
+    "time": "1:30:45.519"
+  },
+  {
+    "grandPrix": "Flag of ItalyItaly",
+    "date": "2001-08-31T22:00:00.000Z",
+    "winner": "Charles LeclercLEC ",
+    "car": "Ferrari",
+    "laps": 53,
+    "time": "1:14:40.727"
+  },
+  {
+    "grandPrix": "Flag of AzerbaijanAzerbaijan",
+    "date": "2001-09-14T22:00:00.000Z",
+    "winner": "Oscar PiastriPIA ",
+    "car": "McLaren Mercedes",
+    "laps": 51,
+    "time": "1:32:58.007"
+  },
+  {
+    "grandPrix": "Flag of SingaporeSingapore",
+    "date": "2001-09-21T22:00:00.000Z",
+    "winner": "Lando NorrisNOR ",
+    "car": "McLaren Mercedes",
+    "laps": 62,
+    "time": "1:40:52.571"
+  },
+  {
+    "grandPrix": "Flag of United States of AmericaUnited States",
+    "date": "2001-10-19T22:00:00.000Z",
+    "winner": "Charles LeclercLEC ",
+    "car": "Ferrari",
+    "laps": 56,
+    "time": "1:35:09.639"
+  },
+  {
+    "grandPrix": "Flag of MexicoMexico",
+    "date": "2001-10-26T22:00:00.000Z",
+    "winner": "Carlos SainzSAI ",
+    "car": "Ferrari",
+    "laps": 71,
+    "time": "1:40:55.800"
+  },
+  {
+    "grandPrix": "Flag of BrazilBrazil",
+    "date": "2001-11-02T23:00:00.000Z",
+    "winner": "Max VerstappenVER ",
+    "car": "Red Bull Racing Honda RBPT",
+    "laps": 69,
+    "time": "2:06:54.430"
+  },
+  {
+    "grandPrix": "Flag of United States of AmericaLas Vegas",
+    "date": "2001-11-22T23:00:00.000Z",
+    "winner": "George RussellRUS ",
+    "car": "Mercedes",
+    "laps": 50,
+    "time": "1:22:05.969"
+  },
+  {
+    "grandPrix": "Flag of QatarQatar",
+    "date": "2001-11-30T23:00:00.000Z",
+    "winner": "Max VerstappenVER ",
+    "car": "Red Bull Racing Honda RBPT",
+    "laps": 57,
+    "time": "1:31:05.323"
+  },
+  {
+    "grandPrix": "Flag of United Arab EmiratesAbu Dhabi",
+    "date": "2001-12-07T23:00:00.000Z",
+    "winner": "Lando NorrisNOR ",
+    "car": "McLaren Mercedes",
+    "laps": 58,
+    "time": "1:26:33.291"
+  }
+]

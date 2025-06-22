@@ -57,3 +57,75 @@ Goal: User can log a race from profile
 │       └── 3.3 submit → 3.4 update UI
 
 
+
+🏗 Epic: Integrate F1-API-JSON → Supabase (matches)
+
+Goal: Ingest the full 2024 F1 season (≈ 24 races) into public.matches — no posters yet — so they immediately appear in the f1_races view and the UI.
+📋 Task Backlog (Cursor-ready)
+ID	Task	Pts	Depends on	Description
+0.1	Spike – Explore F1-API-JSON	2	—	- Install the package (npm i f1-api-json)
+- Read docs ⇒ identify getRaceSchedule(year) & getRaceResults(year).
+- Console-log a sample 2024 schedule JSON.
+0.2	Create data-types file	1	0.1	Define TS interfaces (ApiRaceSchedule, ApiRaceResult) that mirror the JSON returned by the library.
+1.0	Transform utility	3	0.2	Write mapApiRaceToMatch(apiRace): NewMatch that converts
+{ date, eventTitle, raceCountry, round, … } ➜ { sport:'f1', ext_id, title, starts_at, meta }.
+1.1	Seed script seed2024Races.ts	4	1.0	- Call getRaceSchedule(2024).
+- Loop & transform with mapApiRaceToMatch.
+- Batch‐insert into public.matches (insert … on conflict (ext_id) do nothing).
+- Log inserted IDs.
+1.2	Match meta enrichment	2	1.1	For each race: call getRaceResults(2024) → find winner, laps, car.
+Add these fields to meta (winner, laps, car).
+2.0	Supabase Service Role key env	1	1.1	Add SUPABASE_SERVICE_ROLE to .env.local so the seed script bypasses RLS.
+2.1	NPM script wrapper	0.5	1.1	Add "seed:2024": "ts-node scripts/seed2024Races.ts" to package.json.
+2.2	CI check (optional)	2	2.1	GitHub Action that runs the seed script in a dry-run mode on PRs.
+3.0	Manual QA	1	1.1	- Run the script.
+- Verify 24 rows now appear in /f1_races view.
+- Spot-check dates & titles.
+4.0	Update RaceCard query (auto)	0	3.0	Once data is in matches, UI lists will auto-populate (no code).
+
+    Total ~ 16.5 points.
+
+🛠 Key Implementation Details
+
+    API Endpoints to use
+
+        getRaceSchedule(2024) → provides dates, round, country, eventTitle.
+
+        getRaceResults(2024) → iterate, extract winner, car, time, etc.
+
+    ext_id Strategy
+
+ext_id = `${year}-${slugifiedCountry}-gp`  // e.g., 2024-bahrain-gp
+
+meta JSONB example
+
+{
+  "circuit": "Jeddah Corniche Circuit",
+  "country": "Saudi Arabia",
+  "location": "Jeddah",
+  "round": 2,
+  "winner": "Max Verstappen"
+}
+
+Insert statement
+
+    insert into public.matches (sport, ext_id, title, starts_at, meta)
+    values (...)
+    on conflict (ext_id) do update
+      set meta = excluded.meta, updated_at = now();
+
+    Security
+
+        Use service-role key for the seed script (ignores RLS).
+
+        Keep public API key for client calls only.
+
+🧑‍💻 Acceptance Criteria
+
+Running npm run seed:2024 populates all 2024 races into matches.
+
+select * from public.f1_races where year = 2024; returns ≥ 24 rows.
+
+Visiting /races/[id] for any inserted race renders without 404.
+
+No poster URLs yet (we’ll add image scraping later).
