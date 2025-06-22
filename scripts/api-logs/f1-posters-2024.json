@@ -1,0 +1,194 @@
+[
+  {
+    "round": 1,
+    "race_name": "round-1",
+    "url": "https://formulaonestuff.com/resources/1%20iDaXm6DJFX.jpg?timestamp=1738234029815",
+    "local_path": "/Users/tadijaciric/Documents/Education Expedition/Personal/zapas/scripts/api-logs/f1-posters-2024/round-1-round-1.jpg",
+    "width": 400,
+    "height": 560
+  },
+  {
+    "round": 2,
+    "race_name": "round-2",
+    "url": "https://formulaonestuff.com/resources/2%20ww9zjyy84pmc1.jpeg?timestamp=1738234073180",
+    "local_path": "/Users/tadijaciric/Documents/Education Expedition/Personal/zapas/scripts/api-logs/f1-posters-2024/round-2-round-2.jpg",
+    "width": 400,
+    "height": 560
+  },
+  {
+    "round": 3,
+    "race_name": "round-3",
+    "url": "https://formulaonestuff.com/resources/3%20jd33687rmhpc1.jpeg?timestamp=1738234108726",
+    "local_path": "/Users/tadijaciric/Documents/Education Expedition/Personal/zapas/scripts/api-logs/f1-posters-2024/round-3-round-3.jpg",
+    "width": 400,
+    "height": 560
+  },
+  {
+    "round": 4,
+    "race_name": "round-4",
+    "url": "https://formulaonestuff.com/resources/4%20f1%202024%20ferrari%20cover%20art%20grand%20prix%20race%20poster%20japan.jpg?timestamp=1738234145461",
+    "local_path": "/Users/tadijaciric/Documents/Education Expedition/Personal/zapas/scripts/api-logs/f1-posters-2024/round-4-round-4.jpg",
+    "width": 400,
+    "height": 560
+  },
+  {
+    "round": 5,
+    "race_name": "round-5",
+    "url": "https://formulaonestuff.com/resources/5%20f1%202024%20ferrari%20cover%20art%20grand%20prix%20race%20poster%20china.jpeg?timestamp=1738234184794",
+    "local_path": "/Users/tadijaciric/Documents/Education Expedition/Personal/zapas/scripts/api-logs/f1-posters-2024/round-5-round-5.jpg",
+    "width": 400,
+    "height": 560
+  },
+  {
+    "round": 6,
+    "race_name": "round-6",
+    "url": "https://formulaonestuff.com/resources/6%20__carlos_sainz_and_charles_leclerc_real_life_and_1_more_drawn_by_giovanni_p_timpano__b1fb5f4277aa0551bf9fcc14a1663089.jpg?timestamp=1738234249757",
+    "local_path": "/Users/tadijaciric/Documents/Education Expedition/Personal/zapas/scripts/api-logs/f1-posters-2024/round-6-round-6.jpg",
+    "width": 400,
+    "height": 560
+  },
+  {
+    "round": 7,
+    "race_name": "round-7",
+    "url": "https://formulaonestuff.com/resources/7%20ywf2g3h4dk0d1.jpeg.jpg?timestamp=1738234289604",
+    "local_path": "/Users/tadijaciric/Documents/Education Expedition/Personal/zapas/scripts/api-logs/f1-posters-2024/round-7-round-7.jpg",
+    "width": 400,
+    "height": 560
+  },
+  {
+    "round": 8,
+    "race_name": "round-8",
+    "url": "https://formulaonestuff.com/resources/8%20monaco.jpeg?timestamp=1738234216248",
+    "local_path": "/Users/tadijaciric/Documents/Education Expedition/Personal/zapas/scripts/api-logs/f1-posters-2024/round-8-round-8.jpg",
+    "width": 400,
+    "height": 560
+  },
+  {
+    "round": 9,
+    "race_name": "round-9",
+    "url": "https://formulaonestuff.com/resources/9%20txzj1cpmt4d1.jpeg?timestamp=1738234629207",
+    "local_path": "/Users/tadijaciric/Documents/Education Expedition/Personal/zapas/scripts/api-logs/f1-posters-2024/round-9-round-9.jpg",
+    "width": 400,
+    "height": 560
+  },
+  {
+    "round": 10,
+    "race_name": "round-10",
+    "url": "https://formulaonestuff.com/resources/10%20spain%202024.jpeg?timestamp=1738234658808",
+    "local_path": "/Users/tadijaciric/Documents/Education Expedition/Personal/zapas/scripts/api-logs/f1-posters-2024/round-10-round-10.jpg",
+    "width": 400,
+    "height": 560
+  },
+  {
+    "round": 11,
+    "race_name": "round-11",
+    "url": "https://formulaonestuff.com/resources/11%20austria%202024%20f1%20ferrari%20cover%20art%20race%20poster.jpeg?timestamp=1738234686888",
+    "local_path": "/Users/tadijaciric/Documents/Education Expedition/Personal/zapas/scripts/api-logs/f1-posters-2024/round-11-round-11.jpg",
+    "width": 400,
+    "height": 559
+  },
+  {
+    "round": 12,
+    "race_name": "round-12",
+    "url": "https://formulaonestuff.com/resources/12%20c2gz76dmbaad1.jpeg?timestamp=1738234725026",
+    "local_path": "/Users/tadijaciric/Documents/Education Expedition/Personal/zapas/scripts/api-logs/f1-posters-2024/round-12-round-12.jpg",
+    "width": 400,
+    "height": 560
+  },
+  {
+    "round": 13,
+    "race_name": "round-13",
+    "url": "https://formulaonestuff.com/resources/13%20451808059_822057366695514_8999763780731378131_n.jpg?timestamp=1738234757454",
+    "local_path": "/Users/tadijaciric/Documents/Education Expedition/Personal/zapas/scripts/api-logs/f1-posters-2024/round-13-round-13.jpg",
+    "width": 400,
+    "height": 560
+  },
+  {
+    "round": 14,
+    "race_name": "round-14",
+    "url": "https://formulaonestuff.com/resources/14%20452633686_825548189679765_1941842837946667800_n.jpg?timestamp=1738234789782",
+    "local_path": "/Users/tadijaciric/Documents/Education Expedition/Personal/zapas/scripts/api-logs/f1-posters-2024/round-14-round-14.jpg",
+    "width": 400,
+    "height": 560
+  },
+  {
+    "round": 15,
+    "race_name": "round-15",
+    "url": "https://formulaonestuff.com/resources/15%20456487740_842452817989302_5582905007021106875_n.jpg?timestamp=1738234818043",
+    "local_path": "/Users/tadijaciric/Documents/Education Expedition/Personal/zapas/scripts/api-logs/f1-posters-2024/round-15-round-15.jpg",
+    "width": 400,
+    "height": 560
+  },
+  {
+    "round": 16,
+    "race_name": "round-16",
+    "url": "https://formulaonestuff.com/resources/16%20GYa5w3yaoAATvAB.jpg?timestamp=1738234848095",
+    "local_path": "/Users/tadijaciric/Documents/Education Expedition/Personal/zapas/scripts/api-logs/f1-posters-2024/round-16-round-16.jpg",
+    "width": 400,
+    "height": 560
+  },
+  {
+    "round": 17,
+    "race_name": "round-17",
+    "url": "https://formulaonestuff.com/resources/17%20baku%20mxotek5es5od1.jpeg?timestamp=1738234882030",
+    "local_path": "/Users/tadijaciric/Documents/Education Expedition/Personal/zapas/scripts/api-logs/f1-posters-2024/round-17-round-17.jpg",
+    "width": 400,
+    "height": 560
+  },
+  {
+    "round": 18,
+    "race_name": "round-18",
+    "url": "https://formulaonestuff.com/resources/18%20kqa083r29jpd1.jpeg?timestamp=1738234988568",
+    "local_path": "/Users/tadijaciric/Documents/Education Expedition/Personal/zapas/scripts/api-logs/f1-posters-2024/round-18-round-18.jpg",
+    "width": 400,
+    "height": 560
+  },
+  {
+    "round": 19,
+    "race_name": "round-19",
+    "url": "https://formulaonestuff.com/resources/19%20463338530_880362357531681_5782723882891469575_n.jpg?timestamp=1738235016152",
+    "local_path": "/Users/tadijaciric/Documents/Education Expedition/Personal/zapas/scripts/api-logs/f1-posters-2024/round-19-round-19.jpg",
+    "width": 400,
+    "height": 560
+  },
+  {
+    "round": 20,
+    "race_name": "round-20",
+    "url": "https://formulaonestuff.com/resources/20%20mexico%2063xpf38znhwd1.jpeg?timestamp=1738235045269",
+    "local_path": "/Users/tadijaciric/Documents/Education Expedition/Personal/zapas/scripts/api-logs/f1-posters-2024/round-20-round-20.jpg",
+    "width": 400,
+    "height": 560
+  },
+  {
+    "round": 21,
+    "race_name": "round-21",
+    "url": "https://formulaonestuff.com/resources/21%20brazil%20ajffl49zjwxd1.jpeg?timestamp=1738235074453",
+    "local_path": "/Users/tadijaciric/Documents/Education Expedition/Personal/zapas/scripts/api-logs/f1-posters-2024/round-21-round-21.jpg",
+    "width": 400,
+    "height": 560
+  },
+  {
+    "round": 22,
+    "race_name": "round-22",
+    "url": "https://formulaonestuff.com/resources/22%20usa.jpeg?timestamp=1738235444485",
+    "local_path": "/Users/tadijaciric/Documents/Education Expedition/Personal/zapas/scripts/api-logs/f1-posters-2024/round-22-round-22.jpg",
+    "width": 400,
+    "height": 560
+  },
+  {
+    "round": 23,
+    "race_name": "round-23",
+    "url": "https://formulaonestuff.com/resources/23%20468335250_909658944602022_7659838339420518230_n.jpg?timestamp=1738235135633",
+    "local_path": "/Users/tadijaciric/Documents/Education Expedition/Personal/zapas/scripts/api-logs/f1-posters-2024/round-23-round-23.jpg",
+    "width": 400,
+    "height": 560
+  },
+  {
+    "round": 24,
+    "race_name": "round-24",
+    "url": "https://formulaonestuff.com/resources/24%20rggjf5mvt4e1.jpeg?timestamp=1738235183935",
+    "local_path": "/Users/tadijaciric/Documents/Education Expedition/Personal/zapas/scripts/api-logs/f1-posters-2024/round-24-round-24.jpg",
+    "width": 400,
+    "height": 560
+  }
+]

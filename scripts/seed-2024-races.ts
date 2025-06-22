@@ -34,8 +34,42 @@ interface RaceData {
   location?: string;
 }
 
+// Function to properly format race name
+function formatRaceName(name: string): string {
+  // Split by spaces and capitalize first letter of each word
+  return name
+    .toLowerCase()
+    .split(' ')
+    .map((word, index) => {
+      // Always capitalize first letter
+      if (index === 0 && word.toLowerCase() === 'formula') {
+        return 'Formula';
+      }
+      // Keep certain words lowercase
+      if (['de', 'del', 'of', 'and', 'e'].includes(word.toLowerCase())) {
+        return word.toLowerCase();
+      }
+      // Capitalize first letter of other words
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    })
+    .join(' ');
+}
+
 const seedRaces = async () => {
   try {
+    // First, delete all existing F1 races
+    const { error: deleteError } = await supabase
+      .from('matches')
+      .delete()
+      .eq('sport', 'f1');
+
+    if (deleteError) {
+      console.error('Error deleting existing races:', deleteError);
+      process.exit(1);
+    }
+
+    console.log('Deleted existing F1 races');
+
     // Read the JSON file
     const jsonPath = join(__dirname, 'api-logs', 'combined-race-data-2024.json');
     const raceData: RaceData[] = JSON.parse(readFileSync(jsonPath, 'utf-8'));
@@ -44,33 +78,24 @@ const seedRaces = async () => {
 
     // Process each race
     for (const race of raceData) {
-      // Create ext_id using slugify
-      const ext_id = `${race.year}-${slugify(race.race_name, { lower: true })}`;
+      // Format the race name
+      const formattedName = formatRaceName(race.race_name);
       
-      // Check if race already exists
-      const { data: existingRace } = await supabase
-        .from('matches')
-        .select('id')
-        .eq('ext_id', ext_id)
-        .single();
-
-      if (existingRace) {
-        console.log(`Skipping ${ext_id} - already exists`);
-        continue;
-      }
+      // Create ext_id using slugify
+      const ext_id = `${race.year}-${slugify(formattedName, { lower: true })}`;
 
       // Transform race data to match table structure
       const matchData = {
         sport: 'f1',
         ext_id,
-        title: race.race_name,
+        title: formattedName,
         starts_at: new Date(race.race_date),
         poster_url: race.poster_url || '',
         meta: {
           circuit: race.circuit,
           winner: race.winner,
-          location: race.location || race.country,
-          country: race.country
+          country: race.country,
+          round: parseInt(race.round)
         }
       };
 

@@ -13,8 +13,8 @@ const F1_RACE_FIELDS = `
   poster_url,
   circuit,
   winner,
-  location,
   country,
+  round,
   created_at,
   updated_at
 `;
@@ -88,8 +88,8 @@ export async function getRaceDetails(raceId: number): Promise<RaceDetails | null
     poster_url: string;
     circuit: string;
     winner: string | null;
-    location: string;
     country: string;
+    round: string | number;
     average_rating: string | number | null;
     watchers_count: string | number;
     is_past_race: boolean;
@@ -116,7 +116,7 @@ export async function getRaceDetails(raceId: number): Promise<RaceDetails | null
     // Type guard to ensure all required fields are present
     const requiredFields = [
       'race_id', 'year', 'race_name', 'race_date', 'poster_url',
-      'circuit', 'location', 'country'
+      'circuit', 'country', 'round'
     ] as const;
 
     const dataRecord = data as Record<string, unknown>;
@@ -136,8 +136,8 @@ export async function getRaceDetails(raceId: number): Promise<RaceDetails | null
       poster_url: String(rawData.poster_url),
       circuit: String(rawData.circuit),
       winner: rawData.winner ? String(rawData.winner) : null,
-      location: String(rawData.location),
       country: String(rawData.country),
+      round: Number(rawData.round),
       average_rating: rawData.average_rating !== null && !isNaN(Number(rawData.average_rating))
         ? Number(rawData.average_rating)
         : null,

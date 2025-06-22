@@ -6,11 +6,11 @@ export interface RaceDetails {
   poster_url: string | null;
   circuit: string;
   winner: string | null;
-  location: string;
   country: string;
   average_rating: number | null;
   watchers_count: number;
   is_past_race: boolean;
+  round: number;
 }
 
 export interface RaceWatcher {

@@ -56,7 +56,7 @@ export function RaceHeader({ race }: RaceHeaderProps) {
                   <span className="text-gray-400">Circuit:</span> {race.circuit}
                 </div>
                 <div>
-                  <span className="text-gray-400">Location:</span> {race.location}, {race.country}
+                  <span className="text-gray-400">Country:</span> {race.country}
                 </div>
               </div>
             </div>

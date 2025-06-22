@@ -129,3 +129,26 @@ select * from public.f1_races where year = 2024; returns ≥ 24 rows.
 Visiting /races/[id] for any inserted race renders without 404.
 
 No poster URLs yet (we’ll add image scraping later).
+
+
+🧩 Epic: Integrate StatsF1 Poster Data
+🎯 Objective
+
+Scrape official F1 race poster images from StatsF1 for a given season (e.g., 2024) and seed the corresponding poster URLs into the poster_url field of the existing race records in Supabase (public.matches table).
+🔍 Description
+
+StatsF1 provides a centralized poster archive for all F1 races at:
+
+https://www.statsf1.com/en/[year].aspx
+
+Each page contains a grid of all races from the selected year with their official poster image. The goal is to automate the following:
+
+    Scrape poster images (race name + image URL) for a specified year.
+
+    Map scraped data to existing races in the database (matching on title or ext_id).
+
+    Seed poster_url field in the matches table for all 24+ races of that year.
+
+    Ensure no overwrites if poster data already exists.
+
+    Update poster images for races missing this asset only.
