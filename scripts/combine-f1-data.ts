@@ -233,37 +233,9 @@ const getRaceSchedule = async (year: number = new Date().getFullYear()): Promise
     // Sort races by round number
     races.sort((a, b) => parseInt(a.round) - parseInt(b.round));
 
-    // Add missing rounds
-    const missingRounds = [
-      {
-        round: '1',
-        date: '29 Feb - 02 Mar',
-        raceCountry: 'Bahrain',
-        eventTitle: 'GULF AIR BAHRAIN GRAND PRIX'
-      },
-      {
-        round: '16',
-        date: '30 Aug - 01 Sep',
-        raceCountry: 'Italy',
-        eventTitle: 'PIRELLI GRAN PREMIO D\'ITALIA'
-      },
-      {
-        round: '23',
-        date: '29 Nov - 01 Dec',
-        raceCountry: 'Qatar',
-        eventTitle: 'QATAR AIRWAYS QATAR GRAND PRIX'
-      }
-    ];
+    
 
-    // Insert missing rounds at their correct positions
-    for (const missingRace of missingRounds) {
-      const index = races.findIndex(race => parseInt(race.round) > parseInt(missingRace.round));
-      if (index === -1) {
-        races.push(missingRace);
-      } else {
-        races.splice(index, 0, missingRace);
-      }
-    }
+    
 
     // Fix any remaining country name issues
     const fixedRaces = races.map(race => {
@@ -422,7 +394,7 @@ const combineRaceData = async (year: number = new Date().getFullYear()): Promise
 };
 
 // Run the script
-const year = 2024;
+const year = 2023;
 console.log(`\nFetching and combining F1 race data for ${year}...`);
 combineRaceData(year)
   .then(data => console.log(`Successfully processed ${data.length} races`))

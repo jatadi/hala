@@ -214,4 +214,4 @@ const getRaceSchedule = async (year: number = new Date().getFullYear()): Promise
 };
 
 // Test the new implementation
-getRaceSchedule(2024); 
+getRaceSchedule(2023); 

@@ -1,0 +1,42 @@
+[
+  {
+    "round": 1,
+    "race_name": "round-1",
+    "url": "https://preview.redd.it/ferrari-poster-for-the-2022-united-states-grand-prix-v0-dmwohwkmwyu91.jpg?auto=webp&s=7170ac0386fa9db7eafdbb147fad1d9d6e98a6ed",
+    "local_path": "/Users/tadijaciric/Documents/Education Expedition/Personal/zapas/scripts/api-logs/f1-posters-2022/round-1-round-1.jpg",
+    "width": 1463,
+    "height": 2047
+  },
+  {
+    "round": 2,
+    "race_name": "round-2",
+    "url": "https://preview.redd.it/final-ferrari-cover-in-2022-by-bruno-letizia-for-the-2022-v0-7ik852iwua0a1.jpg?auto=webp&s=9b0150d0b8b624588baffe0e1dbf740db56b7550",
+    "local_path": "/Users/tadijaciric/Documents/Education Expedition/Personal/zapas/scripts/api-logs/f1-posters-2022/round-2-round-2.jpg",
+    "width": 1463,
+    "height": 2048
+  },
+  {
+    "round": 3,
+    "race_name": "round-3",
+    "url": "https://formulaonestuff.com/resources/2022%20Ferrari%20F1%20RACE%2011%20Austria%20grand%20prix%20race%20poster%20cover%20art%20.jpeg?timestamp=1670394498668",
+    "local_path": "/Users/tadijaciric/Documents/Education Expedition/Personal/zapas/scripts/api-logs/f1-posters-2022/round-3-round-3.jpg",
+    "width": 4032,
+    "height": 3024
+  },
+  {
+    "round": 4,
+    "race_name": "round-4",
+    "url": "https://formulaonestuff.com/resources/2022%20poster%20collage.jpg?timestamp=1668688215671",
+    "local_path": "/Users/tadijaciric/Documents/Education Expedition/Personal/zapas/scripts/api-logs/f1-posters-2022/round-4-round-4.jpg",
+    "width": 3840,
+    "height": 2160
+  },
+  {
+    "round": 5,
+    "race_name": "round-5",
+    "url": "https://formulaonestuff.com/resources/2022%20ferrari%20brazil%20cover%20art%20race%20poster.jpg?timestamp=1668062139775",
+    "local_path": "/Users/tadijaciric/Documents/Education Expedition/Personal/zapas/scripts/api-logs/f1-posters-2022/round-5-round-5.jpg",
+    "width": 1080,
+    "height": 1512
+  }
+]

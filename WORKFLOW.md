@@ -227,3 +227,12 @@ create policy "Users can read all logs"
    - Verify all stats and UI
    - Add second user's activity
    - Test deletion and updates 
+
+
+1) combine-f1-data@combine-f1-data.ts - fetch data for a year (needs to be genericized)
+2) seed-f1-races @seed-f1-races.ts - create the races for that year in the db
+3) scrape-f1-posters @scrape-f1-posters.ts  - get the posters
+4) seed-f1-posters @seed-f1-posters.ts - put the posters in the db to according races
+accompanying created files:
+combined-race-data-[year]
+f1-posters-[year]

@@ -57,21 +57,10 @@ function formatRaceName(name: string): string {
 
 const seedRaces = async () => {
   try {
-    // First, delete all existing F1 races
-    const { error: deleteError } = await supabase
-      .from('matches')
-      .delete()
-      .eq('sport', 'f1');
-
-    if (deleteError) {
-      console.error('Error deleting existing races:', deleteError);
-      process.exit(1);
-    }
-
-    console.log('Deleted existing F1 races');
+    
 
     // Read the JSON file
-    const jsonPath = join(__dirname, 'api-logs', 'combined-race-data-2024.json');
+    const jsonPath = join(__dirname, 'api-logs', 'combined-race-data-2023.json');
     const raceData: RaceData[] = JSON.parse(readFileSync(jsonPath, 'utf-8'));
     
     console.log(`Found ${raceData.length} races to process`);
