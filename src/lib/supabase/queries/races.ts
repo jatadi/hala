@@ -228,4 +228,37 @@ export async function getRaceWatchers(raceId: number): Promise<RaceWatcher[]> {
     console.error('Unexpected error in getRaceWatchers:', err);
     return [];
   }
+}
+
+/**
+ * Gets the adjacent races (previous and next) for a given race
+ * @param raceDate - The date of the current race
+ * @returns Object containing the previous and next race IDs and names
+ */
+export async function getAdjacentRaces(raceDate: string): Promise<{
+  previous: { id: number; name: string } | null;
+  next: { id: number; name: string } | null;
+}> {
+  // Get the previous race (older)
+  const { data: previousRace } = await supabase
+    .from('f1_races')
+    .select('race_id, race_name')
+    .lt('race_date', raceDate)
+    .order('race_date', { ascending: false })
+    .limit(1)
+    .single();
+
+  // Get the next race (newer)
+  const { data: nextRace } = await supabase
+    .from('f1_races')
+    .select('race_id, race_name')
+    .gt('race_date', raceDate)
+    .order('race_date', { ascending: true })
+    .limit(1)
+    .single();
+
+  return {
+    previous: previousRace ? { id: Number(previousRace.race_id), name: previousRace.race_name } : null,
+    next: nextRace ? { id: Number(nextRace.race_id), name: nextRace.race_name } : null
+  };
 } 

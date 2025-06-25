@@ -1,92 +1,110 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabase/client';
 import { Navbar } from '@/components/navbar';
 import { ProfileHeader } from '@/components/profile/ProfileHeader';
 import { RecentActivity } from '@/components/profile/RecentActivity';
-import { F1Race } from '@/lib/types/f1';
-import { notFound } from 'next/navigation';
-import { debugUserProfile } from '@/lib/supabase/queries/debug';
-import { getProfileStats } from '@/lib/supabase/queries/profile';
-import { supabase } from '@/lib/supabase/client';
+import type { UserProfile } from '@/lib/types/user';
 
-// Disable caching for this page
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export default function ProfilePage({
+  params,
+}: {
+  params: { username: string };
+}) {
+  const router = useRouter();
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [currentUser, setCurrentUser] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-async function getRecentRaces(userId: string): Promise<F1Race[]> {
-  // First get the user's recent logs
-  const { data: logs, error: logsError } = await supabase
-    .from('logs')
-    .select('match_id, watched_at')
-    .eq('user_id', userId)
-    .order('watched_at', { ascending: false });
+  useEffect(() => {
+    async function loadProfileAndUser() {
+      try {
+        // Get current user's ID
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          const { data: userData } = await supabase
+            .from('users')
+            .select('username')
+            .eq('id', session.user.id)
+            .single();
+          setCurrentUser(userData?.username || null);
+        }
 
-  if (logsError) {
-    console.error('Error fetching logs:', logsError);
-    return [];
+        // Get profile data
+        const { data: profileData, error: profileError } = await supabase
+          .from('users')
+          .select('*')
+          .eq('username', params.username)
+          .single();
+
+        if (profileError) {
+          if (profileError.code === 'PGRST116') {
+            setError('Profile not found');
+          } else {
+            setError('Error loading profile');
+          }
+          setProfile(null);
+        } else {
+          setProfile(profileData);
+          setError(null);
+        }
+      } catch (err) {
+        console.error('Error loading profile:', err);
+        setError('Error loading profile');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadProfileAndUser();
+  }, [params.username]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-hala-dark">
+        <Navbar />
+        <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-hala-orange"></div>
+        </div>
+      </div>
+    );
   }
 
-  if (!logs?.length) {
-    console.log('No logs found for user:', userId);
-    return [];
+  if (error) {
+    return (
+      <div className="min-h-screen bg-hala-dark">
+        <Navbar />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="bg-red-500/10 text-red-500 p-4 rounded-lg">
+            {error}
+          </div>
+          {currentUser && (
+            <div className="mt-4">
+              <button
+                onClick={() => router.push(`/profile/${currentUser}`)}
+                className="text-hala-orange hover:text-hala-orange-dark transition-colors duration-200"
+              >
+                Go to your profile
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    );
   }
-
-  console.log('Found logs:', logs);
-
-  // Then get the corresponding races
-  const { data: races, error: racesError } = await supabase
-    .from('f1_races')
-    .select(`
-      race_id,
-      race_name,
-      year,
-      race_date,
-      poster_url,
-      circuit,
-      winner,
-      location,
-      country,
-      created_at,
-      updated_at
-    `)
-    .in('race_id', logs.map(log => log.match_id))
-    .order('race_date', { ascending: false });
-
-  if (racesError) {
-    console.error('Error fetching races:', racesError);
-    return [];
-  }
-
-  console.log('Found races:', races);
-  return races || [];
-}
-
-interface ProfilePageProps {
-  params: {
-    username: string;
-  };
-}
-
-export default async function ProfilePage({ params }: ProfilePageProps) {
-  // Add debug logging
-  console.log('Debug info:');
-  const debug = await debugUserProfile(params.username);
-  console.log('Debug result:', JSON.stringify(debug, null, 2));
-
-  const profile = await getProfileStats(params.username);
-  console.log('Profile data:', profile);
-  
-  if (!profile) {
-    notFound();
-  }
-
-  const recentRaces = await getRecentRaces(profile.id);
-  console.log('Recent races:', recentRaces);
 
   return (
     <div className="min-h-screen bg-hala-dark">
       <Navbar />
-      <ProfileHeader profile={profile} />
+      <ProfileHeader 
+        profile={profile!} 
+        isCurrentUser={currentUser === profile?.username}
+      />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <RecentActivity recentRaces={recentRaces} />
+        <RecentActivity username={params.username} />
       </main>
     </div>
   );

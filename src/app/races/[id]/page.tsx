@@ -1,6 +1,7 @@
 import { Navbar } from '@/components/navbar';
 import { RaceHeader } from '@/components/race/RaceHeader';
-import { getRaceDetails } from '@/lib/supabase/queries/races';
+import { RaceNavigation } from '@/components/race/RaceNavigation';
+import { getRaceDetails, getAdjacentRaces } from '@/lib/supabase/queries/races';
 import { notFound } from 'next/navigation';
 
 interface RacePageProps {
@@ -26,10 +27,17 @@ export default async function RacePage({ params }: RacePageProps) {
       notFound();
     }
 
+    // Get adjacent races
+    const adjacentRaces = await getAdjacentRaces(race.race_date);
+
     return (
       <div className="min-h-screen bg-hala-dark">
         <Navbar />
         <RaceHeader race={race} />
+        <RaceNavigation
+          previousRace={adjacentRaces.previous}
+          nextRace={adjacentRaces.next}
+        />
       </div>
     );
   } catch (error) {

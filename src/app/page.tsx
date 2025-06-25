@@ -1,5 +1,6 @@
 import { Navbar } from '@/components/navbar';
 import { UpcomingRaces } from '@/components/match/UpcomingRaces';
+import Link from 'next/link';
 
 export default function HomePage() {
   return (
@@ -23,9 +24,12 @@ export default function HomePage() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-            <button className="bg-hala-orange text-white px-6 py-3 rounded-xl text-lg font-semibold hover:bg-orange-600 transition-all transform hover:scale-105 shadow-lg">
+            <Link 
+              href="/sign-in"
+              className="bg-hala-orange text-white px-6 py-3 rounded-xl text-lg font-semibold hover:bg-orange-600 transition-all transform hover:scale-105 shadow-lg"
+            >
               Start Your Diary
-            </button>
+            </Link>
           </div>
 
           {/* Upcoming Races */}

@@ -236,3 +236,45 @@ create policy "Users can read all logs"
 accompanying created files:
 combined-race-data-[year]
 f1-posters-[year]
+
+# Project Workflow Overview
+
+## ✅ Current State
+
+- 🏁 Data Ingestion
+  - Successfully scraped and seeded 2023 & 2024 F1 race data
+  - Posters pulled (temporary source)
+  - Seeded into Supabase via seed scripts
+
+- 🖼 Pages
+  - Public landing page (home)
+  - Past races page rendering race data
+
+## 🚧 Next Focus: User Profile & Authentication
+
+### Goal
+Allow users to:
+- Create an account
+- Log in securely
+- Once logged in:
+  - View profile
+  - Track/log races
+  - Leave reviews/comments
+  - Add races to personal diary
+
+### Pages Overview
+
+| Page                  | Auth | Description                          |
+|-----------------------|------|--------------------------------------|
+| `/` (Home)            | ❌   | Landing page (pre-login)             |
+| `/sign-in`            | ❌   | Supabase Auth UI                     |
+| `/profile`            | ✅   | Shows user's diary & interactions    |
+| `/races/[id]/log`     | ✅   | User can log/review a specific race  |
+
+### Flow
+
+1. User lands on `/`
+2. Clicks `Start Your Diary` or `Sign In` → redirected to `/sign-in`
+3. Upon successful login:
+    - Redirect to `/profile`
+    - User can view races they logged, and start logging others

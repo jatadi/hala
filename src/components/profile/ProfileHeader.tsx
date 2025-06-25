@@ -1,19 +1,21 @@
+'use client';
+
 import { UserProfile } from '@/lib/types/user';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface ProfileHeaderProps {
   profile: UserProfile;
+  isCurrentUser: boolean;
 }
 
-export function ProfileHeader({ profile }: ProfileHeaderProps) {
-  console.log('Profile data:', profile);
-
+export function ProfileHeader({ profile, isCurrentUser }: ProfileHeaderProps) {
   return (
     <div className="relative">
       {/* Profile Background */}
       <div className="h-48 bg-gradient-to-r from-hala-blue to-hala-dark" />
       
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="-mt-12 sm:-mt-16 sm:flex sm:items-end sm:space-x-5">
           <div className="flex">
             {/* Avatar */}
@@ -38,7 +40,17 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
           {/* Profile Info */}
           <div className="mt-6 sm:flex-1 sm:min-w-0 sm:flex sm:items-center sm:justify-end sm:space-x-6 sm:pb-1">
             <div className="sm:hidden md:block mt-6 min-w-0 flex-1">
-              <h1 className="text-2xl font-bold text-white truncate">{profile.username}</h1>
+              <div className="flex items-center space-x-4">
+                <h1 className="text-2xl font-bold text-white truncate">{profile.username}</h1>
+                {isCurrentUser && (
+                  <Link
+                    href={`/profile/${profile.username}/edit`}
+                    className="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-hala-orange hover:bg-hala-orange-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-hala-orange transition-colors duration-200"
+                  >
+                    Edit Profile
+                  </Link>
+                )}
+              </div>
               {profile.bio && (
                 <p className="text-gray-400 mt-1">{profile.bio}</p>
               )}
@@ -47,30 +59,38 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
             {/* Stats */}
             <div className="mt-6 flex flex-row justify-stretch space-x-4 sm:space-x-6">
               <div className="text-center">
-                <p className="text-2xl font-bold text-white">{profile.races_watched}</p>
+                <p className="text-2xl font-bold text-white">{profile.races_watched ?? 0}</p>
                 <p className="text-sm text-gray-400">Races</p>
               </div>
               <div className="text-center">
-                <p className="text-2xl font-bold text-white">{profile.following_count}</p>
+                <p className="text-2xl font-bold text-white">{profile.following_count ?? 0}</p>
                 <p className="text-sm text-gray-400">Following</p>
               </div>
               <div className="text-center">
-                <p className="text-2xl font-bold text-white">{profile.followers_count}</p>
+                <p className="text-2xl font-bold text-white">{profile.followers_count ?? 0}</p>
                 <p className="text-sm text-gray-400">Followers</p>
               </div>
-              {profile.average_rating !== null && (
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-white">{profile.average_rating}</p>
-                  <p className="text-sm text-gray-400">Avg Rating</p>
-                </div>
-              )}
+              <div className="text-center">
+                <p className="text-2xl font-bold text-white">{profile.average_rating ?? 0}</p>
+                <p className="text-sm text-gray-400">Avg Rating</p>
+              </div>
             </div>
           </div>
         </div>
         
         {/* Mobile Profile Info */}
         <div className="sm:hidden mt-6">
-          <h1 className="text-2xl font-bold text-white">{profile.username}</h1>
+          <div className="flex items-center space-x-4">
+            <h1 className="text-2xl font-bold text-white">{profile.username}</h1>
+            {isCurrentUser && (
+              <Link
+                href={`/profile/${profile.username}/edit`}
+                className="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-hala-orange hover:bg-hala-orange-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-hala-orange transition-colors duration-200"
+              >
+                Edit Profile
+              </Link>
+            )}
+          </div>
           {profile.bio && (
             <p className="text-gray-400 mt-1">{profile.bio}</p>
           )}

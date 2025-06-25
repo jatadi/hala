@@ -152,3 +152,39 @@ Each page contains a grid of all races from the selected year with their officia
     Ensure no overwrites if poster data already exists.
 
     Update poster images for races missing this asset only.
+
+
+    # Tasks for User Auth & Profile Functionality
+
+## 🛠️ Authentication Setup
+
+- [ ] Install Supabase JS client
+- [ ] Connect Supabase to frontend (use `.env.local`)
+- [ ] Implement `/sign-in` page using Supabase Auth UI
+- [ ] Redirect user to `/profile` on success
+- [ ] Store basic user info in `users` table (if needed)
+
+## 🧑‍💻 Profile Page
+
+- [ ] Create `/profile` route
+- [ ] Show list of races user has interacted with (stub with mock data first)
+- [ ] Add sign-out button
+- [ ] Create placeholder: "No races logged yet" message
+
+## 🧪 User Flow Tests
+
+- [ ] User can sign up via `/sign-in`
+- [ ] On success, redirect to `/profile`
+- [ ] Refresh keeps user logged in (check auth state on load)
+
+## ✨ Extra (later)
+
+- [ ] Allow users to log a race (text, rating, etc.)
+- [ ] Add avatar, bio fields to profile
+- [ ] Allow editing or deleting race logs
+
+## 🔍 Quality of Life
+
+- [ ] Navbar changes after login (e.g., "Sign Out" replaces "Sign In")
+- [ ] Protect `/profile` and other auth routes
+- [ ] Set up reusable Supabase `useUser()` hook
