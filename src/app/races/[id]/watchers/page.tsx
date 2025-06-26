@@ -39,58 +39,58 @@ export default async function WatchersPage({ params }: WatchersPageProps) {
         </div>
 
         <div className="space-y-6">
-          {watchers.map((watcher) => (
-            <div
-              key={watcher.user_id}
-              className="bg-hala-blue-darker rounded-lg p-4 flex items-start gap-4"
-            >
-              {/* Avatar */}
-              <Link href={`/profile/${watcher.username}`} className="flex-shrink-0">
-                <div className="h-12 w-12 relative rounded-full overflow-hidden bg-gray-800">
-                  {watcher.avatar_url ? (
-                    <Image
-                      src={watcher.avatar_url}
-                      alt={watcher.username}
-                      fill
-                      className="object-cover"
-                    />
-                  ) : (
-                    <div className="h-full w-full flex items-center justify-center text-white text-lg">
-                      {watcher.username[0].toUpperCase()}
-                    </div>
-                  )}
-                </div>
-              </Link>
+          {watchers.length > 0 ? (
+            watchers.map((watcher) => (
+              <div
+                key={watcher.user_id}
+                className="bg-hala-blue-darker rounded-lg p-4 flex items-start gap-4"
+              >
+                {/* Avatar */}
+                <Link href={`/profile/${watcher.username}`} className="flex-shrink-0">
+                  <div className="h-12 w-12 relative rounded-full overflow-hidden bg-gray-800">
+                    {watcher.avatar_url ? (
+                      <Image
+                        src={watcher.avatar_url}
+                        alt={watcher.username}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="h-full w-full flex items-center justify-center text-white text-lg">
+                        {watcher.username[0].toUpperCase()}
+                      </div>
+                    )}
+                  </div>
+                </Link>
 
-              {/* Content */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-4 mb-2">
-                  <Link
-                    href={`/profile/${watcher.username}`}
-                    className="text-white hover:text-hala-orange font-medium"
-                  >
-                    {watcher.username}
-                  </Link>
-                  {watcher.rating && (
-                    <div className="flex items-center gap-2">
-                      <StarRating rating={watcher.rating} size="sm" />
-                      <span className="text-gray-400 text-sm">
-                        ({watcher.rating.toFixed(1)})
-                      </span>
-                    </div>
+                {/* Content */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-4 mb-2">
+                    <Link
+                      href={`/profile/${watcher.username}`}
+                      className="text-white hover:text-hala-orange font-medium"
+                    >
+                      {watcher.username}
+                    </Link>
+                    {watcher.rating && (
+                      <div className="flex items-center gap-2">
+                        <StarRating value={watcher.rating} readOnly size="sm" />
+                        <span className="text-gray-400 text-sm">
+                          ({watcher.rating.toFixed(1)})
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  {watcher.review && (
+                    <p className="text-gray-300 text-sm">{watcher.review}</p>
                   )}
+                  <p className="text-gray-400 text-sm mt-2">
+                    Watched on {new Date(watcher.watched_at).toLocaleDateString()}
+                  </p>
                 </div>
-                {watcher.review && (
-                  <p className="text-gray-300 text-sm">{watcher.review}</p>
-                )}
-                <p className="text-gray-400 text-sm mt-2">
-                  Watched on {new Date(watcher.watched_at).toLocaleDateString()}
-                </p>
               </div>
-            </div>
-          ))}
-
-          {watchers.length === 0 && (
+            ))
+          ) : (
             <div className="text-center py-12">
               <p className="text-gray-400">No one has watched this race yet</p>
             </div>

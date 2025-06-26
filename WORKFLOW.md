@@ -33,6 +33,15 @@
 - `created_at` TIMESTAMPTZ DEFAULT NOW()
 - `updated_at` TIMESTAMPTZ DEFAULT NOW()
 
+### Storage Buckets
+
+#### `avatars`
+- Purpose: Store user profile avatars
+- Access: Public read, authenticated write
+- File types: Images only (jpg, png, gif)
+- Size limit: 5MB per file
+- Path format: `{user_id}/{timestamp}.{ext}`
+
 ### Views
 
 #### `f1_races` (Main view for F1 races)
@@ -117,6 +126,18 @@ group by u.id, u.username, u.bio, u.created_at, u.updated_at;
 - Shows user profile and stats
 - Displays recent activity
 - Caching disabled to ensure fresh stats
+- Components:
+  - `ProfileHeader`: User info, stats, and edit button
+  - `RecentActivity`: Grid of recently watched races
+
+#### `/profile/[username]/edit`
+- Protected route (only accessible by profile owner)
+- Features:
+  - Username editing with validation
+  - Bio editing with character limit
+  - Avatar upload with preview
+  - File type and size validation
+  - Upload progress indicator
 
 ### Components
 
@@ -126,11 +147,38 @@ group by u.id, u.username, u.bio, u.created_at, u.updated_at;
 
 #### `ProfileHeader`
 - Shows user info and aggregated stats
-- Displays total races watched/rated
+- Displays:
+  - Username
+  - Avatar (with fallback to initials)
+  - Bio (if exists)
+  - Stats (races watched, following, followers, avg rating)
+  - Edit button (only shown to profile owner)
+- Stats display 0 for empty values
 
 #### `RecentActivity`
 - Lists user's recently watched races
-- Joins with f1_races view for details
+- Grid layout with race cards
+- Shows race posters and basic info
+
+#### `Navbar`
+- Persistent auth state with loading indicators
+- Shows:
+  - Username with profile link
+  - Sign out button
+  - Loading skeleton while fetching
+  - Error state with retry option
+- Handles auth state changes gracefully
+
+### Race Navigation
+
+#### `/races/[id]`
+- Added race-to-race navigation
+- Features:
+  - Left arrow for newer race
+  - Right arrow for older race
+  - Tooltips showing race names
+  - Keyboard navigation support
+  - Proper accessibility markup
 
 ## API Layer
 
@@ -206,6 +254,34 @@ create policy "Users can read all logs"
   using (true);
 ```
 
+## Auth Flow Improvements
+
+### Session Handling
+- Proper session persistence
+- Loading states during auth checks
+- Error handling for failed auth
+- Clean unmount handling
+
+### Profile Access Control
+- Username-based routing
+- Protected edit routes
+- Proper RLS policies
+- Edit button only shown to owner
+
+## Common Components
+
+### Loading States
+- Skeleton UI during data fetch
+- Animated loading indicators
+- Proper error states
+- Retry mechanisms
+
+### Error Handling
+- User-friendly error messages
+- Retry options where appropriate
+- Graceful fallbacks
+- Console logging for debugging
+
 ## Development Workflow
 
 1. Schema Changes
@@ -226,8 +302,24 @@ create policy "Users can read all logs"
    - Add one user's activity
    - Verify all stats and UI
    - Add second user's activity
-   - Test deletion and updates 
+   - Test deletion and updates
 
+## Current State
+
+✅ Profile System
+- User profiles with stats
+- Avatar upload with storage
+- Profile editing
+- Auth state management
+- Race navigation
+- Loading states and error handling
+
+🚧 Next Steps
+- Implement following/followers
+- Add race logging
+- Enhance race details page
+- Add user notifications
+- Implement user lists
 
 1) combine-f1-data@combine-f1-data.ts - fetch data for a year (needs to be genericized)
 2) seed-f1-races @seed-f1-races.ts - create the races for that year in the db

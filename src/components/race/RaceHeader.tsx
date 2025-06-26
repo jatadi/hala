@@ -65,7 +65,11 @@ export function RaceHeader({ race }: RaceHeaderProps) {
             <div className="flex flex-wrap items-center gap-6">
               {race.average_rating !== null && (
                 <div className="flex items-center gap-2">
-                  <StarRating rating={race.average_rating} size="lg" />
+                  <StarRating 
+                    value={race.average_rating} 
+                    readOnly
+                    size="md"
+                  />
                   <span className="text-gray-400 text-lg">
                     ({race.average_rating.toFixed(1)})
                   </span>

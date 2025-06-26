@@ -1,66 +1,112 @@
 import { supabase } from '../client';
-import type { RaceLog, CreateRaceLogInput } from '@/lib/types/log';
+import type { Log, LogUpdate } from '@/lib/types/log';
 
-export async function getUserRaceLogs(userId: string): Promise<RaceLog[]> {
+export interface RaceLogOptions {
+  rating?: number | null;
+  review?: string | null;
+}
+
+/**
+ * Log a race watch or update existing log
+ */
+export async function logRaceWatch(
+  userId: string,
+  raceId: number,
+  options?: RaceLogOptions
+): Promise<Log> {
   const { data, error } = await supabase
-    .from('logs')
-    .select('*')
-    .eq('user_id', userId)
-    .order('watched_at', { ascending: false });
+    .rpc('log_race_watch', {
+      user_id_param: userId,
+      race_id_param: raceId,
+      rating_param: options?.rating,
+      review_param: options?.review
+    });
+
+  if (error) throw error;
+  return data;
+}
+
+/**
+ * Update an existing race log
+ */
+export async function updateRaceLog(
+  userId: string,
+  raceId: number,
+  updates: LogUpdate
+): Promise<Log> {
+  // We can reuse log_race_watch since it handles upserts
+  const { data, error } = await supabase
+    .rpc('log_race_watch', {
+      user_id_param: userId,
+      race_id_param: raceId,
+      rating_param: updates.rating,
+      review_param: updates.review
+    });
+
+  if (error) throw error;
+  return data;
+}
+
+export interface RaceLog {
+  log_id: number;
+  user_id: string;
+  username: string;
+  avatar_url: string | null;
+  rating: number | null;
+  review: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+/**
+ * Get all logs for a specific race
+ */
+export async function getRaceLogs(raceId: number): Promise<RaceLog[]> {
+  const { data, error } = await supabase
+    .rpc('get_race_logs', { race_id_param: raceId });
 
   if (error) throw error;
   return data || [];
 }
 
-export async function getRaceLog(userId: string, matchId: number): Promise<RaceLog | null> {
+export interface UserRaceLog {
+  id: number;
+  user_id: string;
+  race_id: number;
+  rating: number;
+  review: string | null;
+  created_at: string;
+  updated_at: string;
+  race_name: string;
+  circuit: string;
+  country: string;
+}
+
+/**
+ * Get a specific user's log for a race
+ */
+export async function getUserRaceLog(
+  userId: string,
+  raceId: number
+): Promise<UserRaceLog | null> {
   const { data, error } = await supabase
-    .from('logs')
+    .from('race_logs_detailed')
     .select('*')
     .eq('user_id', userId)
-    .eq('match_id', matchId)
+    .eq('race_id', raceId)
     .single();
 
-  if (error && error.code !== 'PGRST116') throw error; // PGRST116 is "not found"
+  if (error) {
+    console.error('Error fetching user race log:', error);
+    return null;
+  }
+
   return data;
 }
 
-export async function createRaceLog(
-  userId: string,
-  input: CreateRaceLogInput
-): Promise<RaceLog> {
-  const { data, error } = await supabase
-    .from('logs')
-    .insert([
-      {
-        user_id: userId,
-        ...input,
-        watched_at: input.watched_at || new Date().toISOString(),
-      },
-    ])
-    .select()
-    .single();
-
-  if (error) throw error;
-  return data;
-}
-
-export async function updateRaceLog(
-  userId: string,
-  matchId: number,
-  input: Partial<CreateRaceLogInput>
-): Promise<RaceLog> {
-  const { data, error } = await supabase
-    .from('logs')
-    .update(input)
-    .eq('user_id', userId)
-    .eq('match_id', matchId)
-    .select()
-    .single();
-
-  if (error) throw error;
-  return data;
-}
-
+/**
+ * Delete a race log
+ */
 export async function deleteRaceLog(
   userId: string,
   matchId: number
@@ -72,4 +118,20 @@ export async function deleteRaceLog(
     .eq('match_id', matchId);
 
   if (error) throw error;
+}
+
+export async function getUserRecentLogs(userId: string, limit = 5): Promise<UserRaceLog[]> {
+  const { data, error } = await supabase
+    .from('race_logs_detailed')
+    .select('*')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+    .limit(limit);
+
+  if (error) {
+    console.error('Error fetching user recent logs:', error);
+    throw error;
+  }
+
+  return data || [];
 } 

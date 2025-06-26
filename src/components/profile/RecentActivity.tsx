@@ -1,105 +1,96 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { RaceCard } from '@/components/match/RaceCard';
-import { F1Race } from '@/lib/types/f1';
-import { supabase } from '@/lib/supabase/client';
+import { getUserRecentLogs, type UserRaceLog } from '@/lib/supabase/queries/logs';
+import Link from 'next/link';
+import { StarRating } from '@/components/ui/StarRating';
 
 interface RecentActivityProps {
-  username: string;
+  userId: string;
 }
 
-export function RecentActivity({ username }: RecentActivityProps) {
-  const [loading, setLoading] = useState(true);
-  const [recentRaces, setRecentRaces] = useState<F1Race[]>([]);
+export function RecentActivity({ userId }: RecentActivityProps) {
+  const [logs, setLogs] = useState<UserRaceLog[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function loadRecentActivity() {
+    async function fetchRecentLogs() {
       try {
-        // Get user ID first
-        const { data: userData } = await supabase
-          .from('users')
-          .select('id')
-          .eq('username', username)
-          .single();
-
-        if (!userData) return;
-
-        // Get user's recent logs
-        const { data: logs } = await supabase
-          .from('logs')
-          .select('match_id, watched_at')
-          .eq('user_id', userData.id)
-          .order('watched_at', { ascending: false })
-          .limit(8);
-
-        if (!logs?.length) {
-          setRecentRaces([]);
-          return;
-        }
-
-        // Get the corresponding races
-        const { data: races } = await supabase
-          .from('f1_races')
-          .select('*')
-          .in('race_id', logs.map(log => log.match_id))
-          .order('race_date', { ascending: false });
-
-        if (races) {
-          setRecentRaces(races as F1Race[]);
-        }
-      } catch (error) {
-        console.error('Error loading recent activity:', error);
-        setRecentRaces([]);
+        setIsLoading(true);
+        const recentLogs = await getUserRecentLogs(userId);
+        setLogs(recentLogs);
+        setError(null);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load recent activity');
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     }
 
-    loadRecentActivity();
-  }, [username]);
+    fetchRecentLogs();
+  }, [userId]);
 
-  if (loading) {
+  if (isLoading) {
     return (
-      <div>
-        <h2 className="text-2xl font-bold text-white mb-6">Recent Activity</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[...Array(4)].map((_, i) => (
-            <div
-              key={i}
-              className="aspect-[2/3] bg-gray-800 rounded-lg animate-pulse"
-            />
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold text-white">Recent Activity</h2>
+        <div className="animate-pulse space-y-4">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="bg-white/5 p-4 rounded-lg space-y-2">
+              <div className="h-4 bg-white/10 rounded w-3/4" />
+              <div className="h-4 bg-white/10 rounded w-1/2" />
+            </div>
           ))}
         </div>
       </div>
     );
   }
 
-  if (recentRaces.length === 0) {
+  if (error) {
     return (
-      <div>
-        <h2 className="text-2xl font-bold text-white mb-6">Recent Activity</h2>
-        <div className="text-center py-12 bg-gray-800/50 rounded-lg">
-          <p className="text-gray-400">No races watched yet</p>
-        </div>
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold text-white">Recent Activity</h2>
+        <div className="text-red-500">{error}</div>
+      </div>
+    );
+  }
+
+  if (logs.length === 0) {
+    return (
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold text-white">Recent Activity</h2>
+        <p className="text-gray-400">No race logs yet.</p>
       </div>
     );
   }
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold text-white mb-6">Recent Activity</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {recentRaces.map((race) => (
-          <RaceCard
-            key={race.race_id}
-            raceId={race.race_id}
-            name={race.race_name}
-            imageUrl={race.poster_url || ''}
-            date={race.year.toString()}
-            round={race.round}
-            circuit={race.circuit}
-          />
+    <div className="space-y-4">
+      <h2 className="text-2xl font-bold text-white">Recent Activity</h2>
+      <div className="space-y-4">
+        {logs.map((log) => (
+          <div key={log.id} className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-4">
+            <Link 
+              href={`/races/${log.race_id}`}
+              className="text-hala-orange hover:text-hala-orange/80"
+            >
+              {log.race_name}
+            </Link>
+            <div className="mt-2 flex items-center gap-4">
+              <StarRating value={log.rating} readOnly />
+              <span className="text-gray-400">
+                {new Date(log.created_at).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric'
+                })}
+              </span>
+            </div>
+            {log.review && (
+              <p className="mt-2 text-gray-300 line-clamp-2">{log.review}</p>
+            )}
+          </div>
         ))}
       </div>
     </div>

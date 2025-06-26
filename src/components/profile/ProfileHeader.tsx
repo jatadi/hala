@@ -3,13 +3,73 @@
 import { UserProfile } from '@/lib/types/user';
 import Image from 'next/image';
 import Link from 'next/link';
+import { FollowButton } from '@/components/social/FollowButton';
+import { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabase/client';
 
 interface ProfileHeaderProps {
   profile: UserProfile;
   isCurrentUser: boolean;
+  onTabChange?: (tab: 'activity' | 'followers' | 'following') => void;
 }
 
-export function ProfileHeader({ profile, isCurrentUser }: ProfileHeaderProps) {
+export function ProfileHeader({ profile, isCurrentUser, onTabChange }: ProfileHeaderProps) {
+  const [followerCount, setFollowerCount] = useState<number | null>(null);
+  const [followingCount, setFollowingCount] = useState<number | null>(null);
+
+  // Fetch initial counts
+  useEffect(() => {
+    const fetchCounts = async () => {
+      const { data: followers, error: followersError } = await supabase
+        .from('follows')
+        .select('follower_id')
+        .eq('following_id', profile.id);
+
+      const { data: following, error: followingError } = await supabase
+        .from('follows')
+        .select('following_id')
+        .eq('follower_id', profile.id);
+
+      if (!followersError) {
+        setFollowerCount(followers?.length ?? 0);
+      }
+      if (!followingError) {
+        setFollowingCount(following?.length ?? 0);
+      }
+    };
+
+    fetchCounts();
+
+    // Subscribe to changes in follows table
+    const followsChannel = supabase
+      .channel('follows_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'follows',
+          filter: `following_id=eq.${profile.id}`,
+        },
+        () => {
+          fetchCounts(); // Refetch counts when follows change
+        }
+      )
+      .subscribe();
+
+    return () => {
+      followsChannel.unsubscribe();
+    };
+  }, [profile.id]);
+  
+  const handleFollowChange = (isFollowing: boolean) => {
+    // Update the follower count optimistically
+    setFollowerCount(prev => {
+      if (prev === null) return isFollowing ? 1 : 0;
+      return isFollowing ? prev + 1 : prev - 1;
+    });
+  };
+
   return (
     <div className="relative">
       {/* Profile Background */}
@@ -42,13 +102,19 @@ export function ProfileHeader({ profile, isCurrentUser }: ProfileHeaderProps) {
             <div className="sm:hidden md:block mt-6 min-w-0 flex-1">
               <div className="flex items-center space-x-4">
                 <h1 className="text-2xl font-bold text-white truncate">{profile.username}</h1>
-                {isCurrentUser && (
+                {isCurrentUser ? (
                   <Link
                     href={`/profile/${profile.username}/edit`}
                     className="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-hala-orange hover:bg-hala-orange-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-hala-orange transition-colors duration-200"
                   >
                     Edit Profile
                   </Link>
+                ) : (
+                  <FollowButton 
+                    userId={profile.id}
+                    username={profile.username}
+                    onFollowChange={handleFollowChange}
+                  />
                 )}
               </div>
               {profile.bio && (
@@ -62,14 +128,28 @@ export function ProfileHeader({ profile, isCurrentUser }: ProfileHeaderProps) {
                 <p className="text-2xl font-bold text-white">{profile.races_watched ?? 0}</p>
                 <p className="text-sm text-gray-400">Races</p>
               </div>
-              <div className="text-center">
-                <p className="text-2xl font-bold text-white">{profile.following_count ?? 0}</p>
+              <button 
+                onClick={() => onTabChange?.('following')} 
+                className="text-center hover:opacity-80"
+              >
+                <p className="text-2xl font-bold text-white">
+                  {followingCount !== null ? followingCount : (
+                    <span className="animate-pulse">...</span>
+                  )}
+                </p>
                 <p className="text-sm text-gray-400">Following</p>
-              </div>
-              <div className="text-center">
-                <p className="text-2xl font-bold text-white">{profile.followers_count ?? 0}</p>
+              </button>
+              <button 
+                onClick={() => onTabChange?.('followers')} 
+                className="text-center hover:opacity-80"
+              >
+                <p className="text-2xl font-bold text-white">
+                  {followerCount !== null ? followerCount : (
+                    <span className="animate-pulse">...</span>
+                  )}
+                </p>
                 <p className="text-sm text-gray-400">Followers</p>
-              </div>
+              </button>
               <div className="text-center">
                 <p className="text-2xl font-bold text-white">{profile.average_rating ?? 0}</p>
                 <p className="text-sm text-gray-400">Avg Rating</p>
@@ -82,13 +162,19 @@ export function ProfileHeader({ profile, isCurrentUser }: ProfileHeaderProps) {
         <div className="sm:hidden mt-6">
           <div className="flex items-center space-x-4">
             <h1 className="text-2xl font-bold text-white">{profile.username}</h1>
-            {isCurrentUser && (
+            {isCurrentUser ? (
               <Link
                 href={`/profile/${profile.username}/edit`}
                 className="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-hala-orange hover:bg-hala-orange-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-hala-orange transition-colors duration-200"
               >
                 Edit Profile
               </Link>
+            ) : (
+              <FollowButton 
+                userId={profile.id}
+                username={profile.username}
+                onFollowChange={handleFollowChange}
+              />
             )}
           </div>
           {profile.bio && (

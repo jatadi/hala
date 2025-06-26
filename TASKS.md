@@ -128,7 +128,7 @@ select * from public.f1_races where year = 2024; returns ≥ 24 rows.
 
 Visiting /races/[id] for any inserted race renders without 404.
 
-No poster URLs yet (we’ll add image scraping later).
+No poster URLs yet (we'll add image scraping later).
 
 
 🧩 Epic: Integrate StatsF1 Poster Data
@@ -188,3 +188,177 @@ Each page contains a grid of all races from the selected year with their officia
 - [ ] Navbar changes after login (e.g., "Sign Out" replaces "Sign In")
 - [ ] Protect `/profile` and other auth routes
 - [ ] Set up reusable Supabase `useUser()` hook
+
+# Development Tasks
+
+## 1. User-to-User Interactions
+
+### Database Setup
+- [x] Create `follows` table:
+  ```sql
+  create table public.follows (
+    follower_id uuid references public.users(id),
+    following_id uuid references public.users(id),
+    created_at timestamptz default now(),
+    primary key (follower_id, following_id)
+  );
+  ```
+- [x] Add RLS policies for follows table
+- [x] Create functions:
+  - `get_user_followers(user_id)`
+  - `get_user_following(user_id)`
+  - `check_is_following(follower_id, following_id)`
+
+### API Layer
+- [x] Add follow-related queries in `src/lib/supabase/queries/social.ts`:
+  - `followUser(userId)`
+  - `unfollowUser(userId)`
+  - `getFollowers(userId)`
+  - `getFollowing(userId)`
+  - `checkIsFollowing(userId)`
+
+### UI Components
+- [x] Create `FollowButton` component:
+  - Toggle follow/unfollow
+  - Loading state
+  - Error handling
+- [x] Create `FollowList` component:
+  - Grid/list of users
+  - Infinite scroll
+  - Loading states
+- [x] Add follow counts to `ProfileHeader`
+- [x] Add followers/following tabs to profile page
+- [x] Link follower counts in header to corresponding tabs
+Note: Decided to use tabs instead of modal/dedicated pages for better UX and context
+
+
+## 2. User-to-Race Interactions
+
+### Database Setup
+- [x] Update `logs` table with new fields:
+  ```sql
+  alter table public.logs
+  add constraint valid_rating check (rating >= 1 and rating <= 5);
+  ```
+- [x] Create functions:
+  - `log_race_watch(user_id, race_id)`
+  - `get_race_logs(race_id)`
+  - `get_user_race_log(user_id, race_id)`
+
+### API Layer
+- [x] Add race logging queries in `src/lib/supabase/queries/logs.ts`:
+  - `logRaceWatch(raceId, options)`
+  - `updateRaceLog(raceId, updates)`
+  - `getRaceLogs(raceId)`
+  - `getUserRaceLog(raceId)`
+
+### UI Components
+- [x] Create `RaceLogForm` component:
+  - Watch status toggle
+  - Rating input (stars)
+  - Review text area
+  - Submit button
+  - Loading states
+- [x] Create `RaceLogList` component:
+  - List of user logs for a race
+  - Sort by recent/rating
+  - Filter options
+- [x] Create `UserRaceLog` component:
+  - Individual log display
+  - Edit/delete options
+- [x] Add log status to race cards
+
+### Pages
+- [ ] Update `/races/[id]` page:
+  - Add logging section
+  - Show user logs
+  - Add sorting/filtering
+- [ ] Add `/races/[id]/log` route for dedicated logging
+- [ ] Update profile page to show recent logs
+
+## 3. Activity Feed
+
+### Database Setup
+- [ ] Create `activities` view:
+  ```sql
+  create view public.activities as
+  select 
+    'log' as type,
+    l.id as activity_id,
+    l.user_id,
+    l.match_id,
+    l.created_at,
+    l.rating,
+    l.review
+  from public.logs l
+  union all
+  select 
+    'follow' as type,
+    f.follower_id || '_' || f.following_id as activity_id,
+    f.follower_id as user_id,
+    null as match_id,
+    f.created_at,
+    null as rating,
+    null as review
+  from public.follows f;
+  ```
+- [ ] Create function `get_feed_for_user(user_id)`
+
+### API Layer
+- [ ] Add activity queries in `src/lib/supabase/queries/activity.ts`:
+  - `getFeedActivities(options)`
+  - `getUserActivities(userId)`
+
+### UI Components
+- [ ] Create `ActivityFeed` component:
+  - Different activity types
+  - Infinite scroll
+  - Loading states
+- [ ] Create activity item components:
+  - `RaceLogActivity`
+  - `FollowActivity`
+
+### Pages
+- [ ] Add `/feed` route for following activity
+- [ ] Update profile to show user's activity
+
+## 4. Notifications (Optional)
+
+### Database Setup
+- [ ] Create `notifications` table
+- [ ] Setup notification triggers
+- [ ] Add RLS policies
+
+### UI Components
+- [ ] Create notification components
+- [ ] Add notification badge to navbar
+
+## Testing Checklist
+
+### User-to-User
+- [ ] Follow/unfollow works
+- [ ] Counts update correctly
+- [ ] Lists show correct users
+- [ ] RLS prevents unauthorized access
+
+### Race Logging
+- [ ] Can log new watch
+- [ ] Can update existing log
+- [ ] Rating constraints work
+- [ ] Lists update correctly
+
+### Activity Feed
+- [ ] Shows correct activities
+- [ ] Updates in real-time
+- [ ] Loads more on scroll
+- [ ] Performance is acceptable
+
+## Migration Steps
+
+1. Run database migrations
+2. Test with existing data
+3. Add new components
+4. Update existing pages
+5. Add new routes
+6. Test all flows
+7. Deploy changes

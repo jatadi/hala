@@ -1,4 +1,7 @@
+'use client';
+
 import Link from 'next/link';
+import { LogStatusBadge } from '../race/LogStatusBadge';
 
 type RaceCardProps = {
   name: string;
@@ -7,9 +10,18 @@ type RaceCardProps = {
   raceId: number;
   round: number;
   circuit: string;
+  userId?: string; // Optional - only provided when user is logged in
 };
 
-export function RaceCard({ name, imageUrl, date, raceId, round, circuit }: RaceCardProps) {
+export function RaceCard({ 
+  name, 
+  imageUrl, 
+  date, 
+  raceId, 
+  round, 
+  circuit,
+  userId 
+}: RaceCardProps) {
   return (
     <Link href={`/races/${raceId}`} className="block">
       <div className="group w-48 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg overflow-hidden hover:border-hala-orange/50 transition-all duration-300">
@@ -27,6 +39,10 @@ export function RaceCard({ name, imageUrl, date, raceId, round, circuit }: RaceC
           <div className="absolute top-0 left-0 right-0 bg-black/75 translate-y-[-100%] group-hover:translate-y-0 transition-transform duration-300 py-1">
             <p className="text-white text-sm font-medium text-center">{date}</p>
           </div>
+          {/* Log Status Badge */}
+          {userId && (
+            <LogStatusBadge userId={userId} raceId={raceId} />
+          )}
         </div>
 
         {/* Race Name and Circuit */}

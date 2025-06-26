@@ -1,6 +1,6 @@
 import { Navbar } from '@/components/navbar';
 import { SeasonNavigation } from '@/components/match/SeasonNavigation';
-import { RaceCard } from '@/components/match/RaceCard';
+import { RaceList } from '@/components/match/RaceList';
 import { getAllF1Races } from '@/lib/supabase/queries/races';
 
 export const dynamic = 'force-dynamic';
@@ -37,17 +37,7 @@ export default async function RacesPage() {
             ) : (
               <>
                 <h2 className="text-xl font-semibold text-white mb-6">Recent Races</h2>
-                <div className="flex flex-wrap justify-center gap-6">
-                  {recentRaces.map((race) => (
-                    <RaceCard
-                      key={race.race_id}
-                      name={race.race_name}
-                      imageUrl={race.poster_url || ''}
-                      date={race.year.toString()}
-                      raceId={race.race_id}
-                    />
-                  ))}
-                </div>
+                <RaceList races={recentRaces} />
               </>
             )}
           </div>

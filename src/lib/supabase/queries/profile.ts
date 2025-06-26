@@ -49,4 +49,37 @@ export async function getProfileStats(username: string): Promise<UserProfile | n
   console.log('Combined profile:', profile);
 
   return profile;
+}
+
+export async function getUserProfile(username: string): Promise<UserProfile | null> {
+  const { data, error } = await supabase
+    .from('user_profiles')
+    .select('*')
+    .eq('username', username)
+    .single();
+
+  if (error) {
+    console.error('Error fetching user profile:', error);
+    return null;
+  }
+
+  return data;
+}
+
+export async function getCurrentUserProfile(): Promise<UserProfile | null> {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session?.user) return null;
+
+  const { data, error } = await supabase
+    .from('user_profiles')
+    .select('*')
+    .eq('id', session.user.id)
+    .single();
+
+  if (error) {
+    console.error('Error fetching current user profile:', error);
+    return null;
+  }
+
+  return data;
 } 

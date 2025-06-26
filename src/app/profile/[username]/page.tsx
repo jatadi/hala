@@ -1,96 +1,91 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase/client';
 import { Navbar } from '@/components/navbar';
 import { ProfileHeader } from '@/components/profile/ProfileHeader';
 import { RecentActivity } from '@/components/profile/RecentActivity';
+import { useEffect, useState } from 'react';
+import { getUserProfile, getCurrentUserProfile } from '@/lib/supabase/queries/profile';
+import { notFound } from 'next/navigation';
 import type { UserProfile } from '@/lib/types/user';
 
-export default function ProfilePage({
-  params,
-}: {
-  params: { username: string };
-}) {
-  const router = useRouter();
+interface ProfilePageProps {
+  params: {
+    username: string;
+  };
+}
+
+export default function ProfilePage({ params }: ProfilePageProps) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [currentUser, setCurrentUser] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function loadProfileAndUser() {
+    async function loadProfile() {
       try {
-        // Get current user's ID
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session?.user) {
-          const { data: userData } = await supabase
-            .from('users')
-            .select('username')
-            .eq('id', session.user.id)
-            .single();
-          setCurrentUser(userData?.username || null);
+        setIsLoading(true);
+        const [userProfile, currentUserProfile] = await Promise.all([
+          getUserProfile(params.username),
+          getCurrentUserProfile()
+        ]);
+        
+        if (!userProfile) {
+          notFound();
         }
 
-        // Get profile data
-        const { data: profileData, error: profileError } = await supabase
-          .from('users')
-          .select('*')
-          .eq('username', params.username)
-          .single();
-
-        if (profileError) {
-          if (profileError.code === 'PGRST116') {
-            setError('Profile not found');
-          } else {
-            setError('Error loading profile');
-          }
-          setProfile(null);
-        } else {
-          setProfile(profileData);
-          setError(null);
-        }
+        setProfile(userProfile);
+        setCurrentUser(currentUserProfile);
+        setError(null);
       } catch (err) {
-        console.error('Error loading profile:', err);
-        setError('Error loading profile');
+        setError(err instanceof Error ? err.message : 'Failed to load profile');
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     }
 
-    loadProfileAndUser();
+    loadProfile();
   }, [params.username]);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-hala-dark">
         <Navbar />
-        <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-hala-orange"></div>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="animate-pulse space-y-8">
+            {/* Profile Header Skeleton */}
+            <div className="flex items-center gap-6">
+              <div className="w-24 h-24 bg-white/5 rounded-full" />
+              <div className="flex-1 space-y-4">
+                <div className="h-8 bg-white/5 rounded w-1/3" />
+                <div className="h-4 bg-white/5 rounded w-1/4" />
+              </div>
+            </div>
+            {/* Recent Activity Skeleton */}
+            <div className="space-y-4">
+              <div className="h-8 bg-white/5 rounded w-1/4" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {[...Array(4)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="aspect-[2/3] bg-white/5 rounded-lg"
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 
-  if (error) {
+  if (error || !profile) {
     return (
       <div className="min-h-screen bg-hala-dark">
         <Navbar />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="bg-red-500/10 text-red-500 p-4 rounded-lg">
-            {error}
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-red-500">
+            {error || 'Failed to load profile'}
           </div>
-          {currentUser && (
-            <div className="mt-4">
-              <button
-                onClick={() => router.push(`/profile/${currentUser}`)}
-                className="text-hala-orange hover:text-hala-orange-dark transition-colors duration-200"
-              >
-                Go to your profile
-              </button>
-            </div>
-          )}
         </div>
       </div>
     );
@@ -99,13 +94,15 @@ export default function ProfilePage({
   return (
     <div className="min-h-screen bg-hala-dark">
       <Navbar />
-      <ProfileHeader 
-        profile={profile!} 
-        isCurrentUser={currentUser === profile?.username}
-      />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <RecentActivity username={params.username} />
-      </main>
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="space-y-8">
+          <ProfileHeader 
+            profile={profile} 
+            isCurrentUser={currentUser?.id === profile.id}
+          />
+          <RecentActivity userId={profile.id} />
+        </div>
+      </div>
     </div>
   );
 } 
