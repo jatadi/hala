@@ -5,6 +5,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { StarRating } from '@/components/ui/StarRating';
 
+export const dynamic = 'force-dynamic';
+
 interface WatchersPageProps {
   params: {
     id: string;

@@ -324,13 +324,13 @@ Note: Decided to use tabs instead of modal/dedicated pages for better UX and con
 ## 4. Notifications (Optional)
 
 ### Database Setup
-- [ ] Create `notifications` table
-- [ ] Setup notification triggers
-- [ ] Add RLS policies
+- [x] Create `notifications` table
+- [x] Setup notification triggers
+- [x] Add RLS policies
 
 ### UI Components
-- [ ] Create notification components
-- [ ] Add notification badge to navbar
+- [x] Create notification components
+- [x] Add notification badge to navbar
 
 ## Testing Checklist
 

@@ -11,5 +11,10 @@ export const supabase = createClient(supabaseUrl, supabaseKey, {
   },
   db: {
     schema: 'public'
+  },
+  global: {
+    headers: {
+      'Cache-Control': 'no-store'
+    }
   }
 }); 
