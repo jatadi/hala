@@ -191,6 +191,13 @@ export function Navbar() {
               </Link>
               <span className="text-gray-500">|</span>
               <Link 
+                href="/feed" 
+                className="text-gray-300 hover:text-white hover:text-hala-orange transition-colors duration-200 font-medium"
+              >
+                Feed
+              </Link>
+              <span className="text-gray-500">|</span>
+              <Link 
                 href="/lists" 
                 className="text-lg text-gray-300 hover:text-white hover:text-hala-orange transition-colors duration-200 font-medium"
               >
@@ -232,6 +239,12 @@ export function Navbar() {
                   className="block text-gray-300 hover:text-white hover:text-hala-orange transition-colors duration-200 font-medium py-2"
                 >
                   Races
+                </Link>
+                <Link
+                  href="/feed"
+                  className="block text-gray-300 hover:text-white hover:text-hala-orange transition-colors duration-200 font-medium py-2"
+                >
+                  Feed
                 </Link>
                 <Link
                   href="/lists"

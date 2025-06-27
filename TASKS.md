@@ -269,17 +269,17 @@ Note: Decided to use tabs instead of modal/dedicated pages for better UX and con
 - [x] Add log status to race cards
 
 ### Pages
-- [ ] Update `/races/[id]` page:
+- [x] Update `/races/[id]` page:
   - Add logging section
   - Show user logs
   - Add sorting/filtering
-- [ ] Add `/races/[id]/log` route for dedicated logging
-- [ ] Update profile page to show recent logs
+- [x] Add `/races/[id]/log` route for dedicated logging
+- [x] Update profile page to show recent logs
 
 ## 3. Activity Feed
 
 ### Database Setup
-- [ ] Create `activities` view:
+- [x] Create `activities` view:
   ```sql
   create view public.activities as
   select 
@@ -302,25 +302,24 @@ Note: Decided to use tabs instead of modal/dedicated pages for better UX and con
     null as review
   from public.follows f;
   ```
-- [ ] Create function `get_feed_for_user(user_id)`
+- [x] Create function `get_feed_for_user(user_id)`
 
 ### API Layer
-- [ ] Add activity queries in `src/lib/supabase/queries/activity.ts`:
+- [x] Add activity queries in `src/lib/supabase/queries/activity.ts`:
   - `getFeedActivities(options)`
   - `getUserActivities(userId)`
 
 ### UI Components
-- [ ] Create `ActivityFeed` component:
+- [x] Create `ActivityFeed` component:
   - Different activity types
   - Infinite scroll
   - Loading states
-- [ ] Create activity item components:
+- [x] Create activity item components:
   - `RaceLogActivity`
   - `FollowActivity`
 
 ### Pages
-- [ ] Add `/feed` route for following activity
-- [ ] Update profile to show user's activity
+- [x] Add `/feed` route for following activity
 
 ## 4. Notifications (Optional)
 

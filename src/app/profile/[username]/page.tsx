@@ -3,6 +3,7 @@
 import { Navbar } from '@/components/navbar';
 import { ProfileHeader } from '@/components/profile/ProfileHeader';
 import { RecentActivity } from '@/components/profile/RecentActivity';
+import { FollowList } from '@/components/social/FollowList';
 import { useEffect, useState } from 'react';
 import { getUserProfile, getCurrentUserProfile } from '@/lib/supabase/queries/profile';
 import { notFound } from 'next/navigation';
@@ -14,11 +15,20 @@ interface ProfilePageProps {
   };
 }
 
+type ProfileTab = 'activity' | 'followers' | 'following';
+
+const TABS: { id: ProfileTab; label: string }[] = [
+  { id: 'activity', label: 'Activity' },
+  { id: 'followers', label: 'Followers' },
+  { id: 'following', label: 'Following' }
+];
+
 export default function ProfilePage({ params }: ProfilePageProps) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<ProfileTab>('activity');
 
   useEffect(() => {
     async function loadProfile() {
@@ -99,8 +109,48 @@ export default function ProfilePage({ params }: ProfilePageProps) {
           <ProfileHeader 
             profile={profile} 
             isCurrentUser={currentUser?.id === profile.id}
+            onTabChange={setActiveTab}
           />
-          <RecentActivity userId={profile.id} />
+          
+          {/* Tab Navigation */}
+          <div className="border-b border-white/10">
+            <nav className="-mb-px flex space-x-8" aria-label="Profile sections">
+              {TABS.map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`
+                    whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm
+                    ${activeTab === tab.id
+                      ? 'border-hala-orange text-hala-orange'
+                      : 'border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-300'
+                    }
+                  `}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </nav>
+          </div>
+          
+          {/* Tab Content */}
+          {activeTab === 'activity' && (
+            <RecentActivity userId={profile.id} />
+          )}
+          {activeTab === 'followers' && (
+            <FollowList 
+              userId={profile.id}
+              type="followers"
+              currentUserId={currentUser?.id}
+            />
+          )}
+          {activeTab === 'following' && (
+            <FollowList 
+              userId={profile.id}
+              type="following"
+              currentUserId={currentUser?.id}
+            />
+          )}
         </div>
       </div>
     </div>

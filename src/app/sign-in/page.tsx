@@ -84,8 +84,8 @@ export default function SignIn() {
         )}
 
         <div className="mt-8 bg-hala-dark/50 backdrop-blur-sm rounded-xl p-6 shadow-xl ring-1 ring-white/10">
-          <Auth
-            supabaseClient={supabase}
+      <Auth
+        supabaseClient={supabase}
             appearance={{
               theme: ThemeSupa,
               variables: {
