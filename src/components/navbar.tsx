@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase/client';
 import type { User } from '@supabase/supabase-js';
 import type { UserProfile } from '@/lib/types/user';
+import { NotificationBell } from '@/components/notifications/NotificationBell';
 
 export function Navbar() {
   const router = useRouter();
@@ -135,6 +136,7 @@ export function Navbar() {
     if (user && userProfile) {
       return (
         <div className="flex items-center space-x-4">
+          <NotificationBell />
           <Link
             href={`/profile/${userProfile.username}`}
             className="text-gray-300 hover:text-white transition-colors duration-200"
