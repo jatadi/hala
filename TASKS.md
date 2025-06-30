@@ -352,12 +352,172 @@ Note: Decided to use tabs instead of modal/dedicated pages for better UX and con
 - [ ] Loads more on scroll
 - [ ] Performance is acceptable
 
-## Migration Steps
+# 📝 Epic: Race Lists & Social Interactions
 
-1. Run database migrations
-2. Test with existing data
-3. Add new components
-4. Update existing pages
-5. Add new routes
-6. Test all flows
-7. Deploy changes
+## 🎯 Objective
+Enable users to create, manage, and interact with curated lists of F1 races. Lists can be public or private, and other users can like and comment on public lists.
+
+## 🗃️ Database Setup
+
+### Lists Table
+- [x] Create `lists` table:
+  ```sql
+  create table public.lists (
+    id uuid primary key default gen_random_uuid(),
+    owner_id uuid references public.users(id),
+    title text not null,
+    description text,
+    is_public boolean default true,
+    created_at timestamptz default now(),
+    updated_at timestamptz default now()
+  );
+  ```
+
+### List Items Table
+- [x] Create `list_items` table:
+  ```sql
+  create table public.list_items (
+    id uuid primary key default gen_random_uuid(),
+    list_id uuid references public.lists(id) on delete cascade,
+    race_id bigint references public.matches(id),
+    note text,
+    position integer,
+    created_at timestamptz default now(),
+    updated_at timestamptz default now(),
+    unique(list_id, race_id)
+  );
+  ```
+
+### List Interactions
+- [x] Create `list_likes` table:
+  ```sql
+  create table public.list_likes (
+    list_id uuid references public.lists(id) on delete cascade,
+    user_id uuid references public.users(id),
+    created_at timestamptz default now(),
+    primary key (list_id, user_id)
+  );
+  ```
+- [x] Create `list_comments` table:
+  ```sql
+  create table public.list_comments (
+    id uuid primary key default gen_random_uuid(),
+    list_id uuid references public.lists(id) on delete cascade,
+    user_id uuid references public.users(id),
+    content text not null,
+    created_at timestamptz default now(),
+    updated_at timestamptz default now()
+  );
+  ```
+
+### Database Functions & Policies
+- [x] Add RLS policies for all new tables
+- [x] Create functions:
+  - `create_list(owner_id, title, description, is_public)`
+  - `add_race_to_list(list_id, race_id, note, position)`
+  - `reorder_list_items(list_id, item_positions)`
+  - `get_user_lists(user_id)`
+  - `get_list_details(list_id)`
+  - `get_popular_lists()`
+
+## 🎨 UI Components
+
+### List Management
+- [x] Create `ListForm` component:
+  - Title input
+  - Description textarea
+  - Privacy toggle
+  - Submit button
+- [x] Create `ListCard` component:
+  - Title
+  - Description preview
+  - Race count
+  - Like count
+  - Owner info
+- [x] Create `ListGrid` component:
+  - Grid of ListCards
+  - Loading states
+  - Empty states
+
+### List Detail View
+- [x] Create `ListHeader` component:
+  - Title
+  - Description
+  - Owner info
+  - Edit/Delete buttons
+  - Like button
+  - Privacy indicator
+- [x] Create `ListItems` component:
+  - Draggable race list
+  - Race cards with notes
+  - Add race button
+  - Reordering UI
+- [x] Create `ListComments` component:
+  - Comment list
+  - Comment form
+  - Loading states
+
+### Race Integration
+- [x] Add "Add to List" button on race pages
+- [x] Create list selector modal
+- [x] Add list creation from race context
+
+## 📱 Pages
+
+### List Routes
+- [x] Add `/lists` route:
+  - User's lists
+  - Popular lists
+  - Followed users' lists
+- [x] Add `/lists/new` route
+- [x] Add `/lists/[id]` route:
+  - List details
+  - Items
+  - Comments
+- [x] Add `/lists/[id]/edit` route
+- [ ] Add `/profile/[username]/lists` route
+
+## 🔄 State Management
+- [ ] Add list-related queries to Supabase client
+- [ ] Implement optimistic updates for likes
+- [ ] Handle list item reordering
+- [ ] Real-time updates for comments
+
+## 🎯 Acceptance Criteria
+
+### List Creation & Management
+- [ ] Users can create new lists with title, description, and privacy setting
+- [ ] Users can edit their own lists
+- [ ] Users can delete their own lists
+- [ ] Users can add/remove races from lists
+- [ ] Users can reorder races within a list
+- [ ] Users can add notes to races in lists
+
+### List Discovery & Interaction
+- [ ] Users can view public lists from other users
+- [ ] Users can like lists
+- [ ] Users can comment on lists
+- [ ] Users can see their own lists on their profile
+- [ ] Users can see others' public lists on their profiles
+- [ ] Popular lists are discoverable
+
+### Privacy & Permissions
+- [ ] Private lists are only visible to their owners
+- [ ] Only list owners can edit list details
+- [ ] Only list owners can manage list items
+- [ ] Anyone can interact with public lists (like, comment)
+
+### Performance & UX
+- [ ] List operations are fast and responsive
+- [ ] Drag-and-drop reordering is smooth
+- [ ] Real-time updates work for likes and comments
+- [ ] Loading and error states are handled gracefully
+
+## 📊 Metrics
+- Number of lists created
+- Average races per list
+- List interaction rate (likes, comments)
+- Public vs private list ratio
+- List discovery through profiles
+
+

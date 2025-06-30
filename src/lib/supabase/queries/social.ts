@@ -1,12 +1,18 @@
 import { supabase } from '../client';
 import type { UserProfile } from '@/lib/types/user';
+import type { ListDetails } from '@/lib/types/list';
+
+interface FollowResponse {
+  success: boolean;
+  error?: string;
+}
 
 /**
  * Follow a user
- * @param userId - The ID of the user to follow
+ * @param entityId - The ID of the user to follow
  * @returns Success status and any error
  */
-export async function followUser(userId: string): Promise<{ success: boolean; error: Error | null }> {
+export async function followUser(userId: string): Promise<{ success: boolean; error?: string }> {
   try {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
@@ -21,19 +27,19 @@ export async function followUser(userId: string): Promise<{ success: boolean; er
       });
 
     if (error) throw error;
-    return { success: true, error: null };
+    return { success: true };
   } catch (error) {
     console.error('Error following user:', error);
-    return { success: false, error: error as Error };
+    return { success: false, error: error instanceof Error ? error.message : 'An error occurred' };
   }
 }
 
 /**
  * Unfollow a user
- * @param userId - The ID of the user to unfollow
+ * @param entityId - The ID of the user to unfollow
  * @returns Success status and any error
  */
-export async function unfollowUser(userId: string): Promise<{ success: boolean; error: Error | null }> {
+export async function unfollowUser(userId: string): Promise<{ success: boolean; error?: string }> {
   try {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
@@ -49,10 +55,10 @@ export async function unfollowUser(userId: string): Promise<{ success: boolean; 
       });
 
     if (error) throw error;
-    return { success: true, error: null };
+    return { success: true };
   } catch (error) {
     console.error('Error unfollowing user:', error);
-    return { success: false, error: error as Error };
+    return { success: false, error: error instanceof Error ? error.message : 'An error occurred' };
   }
 }
 
@@ -100,29 +106,50 @@ export async function getFollowing(userId: string): Promise<{
 
 /**
  * Check if one user follows another
- * @param followingId - The ID of the user to check if being followed
+ * @param entityId - The ID of the user to check if being followed
  * @returns Boolean indicating follow status and any error
  */
-export async function checkIsFollowing(followingId: string): Promise<{
-  isFollowing: boolean;
-  error: Error | null;
-}> {
+export async function checkIsFollowing(userId: string): Promise<{ isFollowing: boolean; error?: string }> {
   try {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
-      return { isFollowing: false, error: new Error('Not authenticated') };
+      return { isFollowing: false, error: 'Not authenticated' };
     }
 
     const { data, error } = await supabase
       .rpc('check_is_following', {
         follower_id: session.user.id,
-        following_id: followingId
+        following_id: userId
       });
 
     if (error) throw error;
-    return { isFollowing: data || false, error: null };
+    return { isFollowing: data || false };
   } catch (error) {
     console.error('Error checking follow status:', error);
-    return { isFollowing: false, error: error as Error };
+    return { isFollowing: false, error: error instanceof Error ? error.message : 'An error occurred' };
   }
+}
+
+export async function getFollowedUsersLists(): Promise<ListDetails[]> {
+  const { data, error } = await supabase
+    .rpc('get_followed_users_lists');
+
+  if (error) throw error;
+  return data;
+}
+
+export async function toggleListFollow(listId: string): Promise<boolean> {
+  const { data, error } = await supabase
+    .rpc('toggle_list_follow', { p_list_id: listId });
+
+  if (error) throw error;
+  return data;
+}
+
+export async function toggleUserFollow(userId: string): Promise<boolean> {
+  const { data, error } = await supabase
+    .rpc('toggle_user_follow', { p_user_id: userId });
+
+  if (error) throw error;
+  return data;
 } 
